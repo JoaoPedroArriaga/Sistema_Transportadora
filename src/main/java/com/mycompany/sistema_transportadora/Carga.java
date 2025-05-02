@@ -14,30 +14,18 @@ public class Carga {
     public Carga() {
     }
 
-    /**
-     * 
-     */
     public void Adicionar_Carga() {
         // TODO implement here
     }
 
-    /**
-     * 
-     */
     public void Atualizar_Carga() {
         // TODO implement here
     }
 
-    /**
-     * 
-     */
     public void Ler_Carga() {
         // TODO implement here
     }
 
-    /**
-     * 
-     */
     public void Excluir_Carga() {
         // TODO implement here
     }
