@@ -1,2 +1,2 @@
 # Sistema_Transportadora
- Sistema de transportadora simples feito para o trabalho de Progamação 2
+ Sistema de transportadora simples feito como trabalho de Progamação 2
