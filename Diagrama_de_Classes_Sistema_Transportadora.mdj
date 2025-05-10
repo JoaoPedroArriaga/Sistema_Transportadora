@@ -6914,7 +6914,7 @@
 											"top": 350,
 											"width": 116.68896484375,
 											"height": 13,
-											"text": "+cod_estado: int",
+											"text": "-cod_estado: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -6926,6 +6926,7 @@
 											"model": {
 												"$ref": "AAAAAAGWAwhPt6aXd/Y="
 											},
+											"visible": false,
 											"font": "Arial;13;0",
 											"left": 1237,
 											"top": 365,
@@ -6945,10 +6946,10 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1237,
-											"top": 380,
+											"top": 365,
 											"width": 116.68896484375,
 											"height": 13,
-											"text": "+nome: String",
+											"text": "-nome: String",
 											"horizontalAlignment": 0
 										}
 									],
@@ -6956,7 +6957,7 @@
 									"left": 1232,
 									"top": 345,
 									"width": 126.68896484375,
-									"height": 53
+									"height": 38
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -6979,7 +6980,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1237,
-											"top": 403,
+											"top": 388,
 											"width": 116.68896484375,
 											"height": 13,
 											"text": "+Registrar_Estado()",
@@ -6996,7 +6997,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1237,
-											"top": 418,
+											"top": 403,
 											"width": 116.68896484375,
 											"height": 13,
 											"text": "+Excluir_Estado()",
@@ -7005,7 +7006,7 @@
 									],
 									"font": "Arial;13;0",
 									"left": 1232,
-									"top": 398,
+									"top": 383,
 									"width": 126.68896484375,
 									"height": 38
 								},
@@ -7047,7 +7048,7 @@
 							"left": 1232,
 							"top": 320,
 							"width": 126.68896484375,
-							"height": 116,
+							"height": 101,
 							"nameCompartment": {
 								"$ref": "AAAAAAGWAwd4C6KFs9M="
 							},
@@ -7448,7 +7449,24 @@
 											"top": 510,
 											"width": 150.6689453125,
 											"height": 13,
-											"text": "+cod_cidade: int",
+											"text": "-cod_cidade: int",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGWt2MBkc32vcY=",
+											"_parent": {
+												"$ref": "AAAAAAGWAwkSD8INnzM="
+											},
+											"model": {
+												"$ref": "AAAAAAGWt2MBec3Yvq0="
+											},
+											"font": "Arial;13;0",
+											"left": 1221,
+											"top": 525,
+											"width": 150.6689453125,
+											"height": 13,
+											"text": "-cod_estado: int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7462,10 +7480,10 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1221,
-											"top": 525,
+											"top": 540,
 											"width": 150.6689453125,
 											"height": 13,
-											"text": "+nome: String",
+											"text": "-nome: String",
 											"horizontalAlignment": 0
 										}
 									],
@@ -7473,7 +7491,7 @@
 									"left": 1216,
 									"top": 505,
 									"width": 160.6689453125,
-									"height": 38
+									"height": 53
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -7496,7 +7514,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1221,
-											"top": 548,
+											"top": 563,
 											"width": 150.6689453125,
 											"height": 13,
 											"text": "+Adicionar_Cidade()",
@@ -7513,7 +7531,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 1221,
-											"top": 563,
+											"top": 578,
 											"width": 150.6689453125,
 											"height": 13,
 											"text": "+Excluir_Cidade()",
@@ -7522,7 +7540,7 @@
 									],
 									"font": "Arial;13;0",
 									"left": 1216,
-									"top": 543,
+									"top": 558,
 									"width": 160.6689453125,
 									"height": 38
 								},
@@ -7564,7 +7582,7 @@
 							"left": 1216,
 							"top": 480,
 							"width": 160.6689453125,
-							"height": 101,
+							"height": 116,
 							"nameCompartment": {
 								"$ref": "AAAAAAGWAwkSD8IIYZg="
 							},
@@ -7603,7 +7621,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 1309,
-									"top": 450,
+									"top": 443,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -7624,7 +7642,7 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"left": 1324,
-									"top": 450,
+									"top": 443,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -7645,7 +7663,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 1280,
-									"top": 451,
+									"top": 444,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -7666,7 +7684,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 1310,
-									"top": 454,
+									"top": 439,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -7687,7 +7705,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 1323,
-									"top": 457,
+									"top": 442,
 									"height": 13,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -7708,7 +7726,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 1282,
-									"top": 450,
+									"top": 435,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
@@ -7813,7 +7831,7 @@
 							"tail": {
 								"$ref": "AAAAAAGWAwd4C6KEryo="
 							},
-							"points": "1295:435;1295:480",
+							"points": "1295:420;1295:480",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGWAwnwrdKmjmY="
@@ -8413,7 +8431,7 @@
 							},
 							"name": "estado",
 							"type": {
-								"$ref": "AAAAAAGVuwXQ1dS8JcM="
+								"$ref": "AAAAAAGWAwd4C6KCRGs="
 							}
 						},
 						{
@@ -8424,7 +8442,7 @@
 							},
 							"name": "cidade",
 							"type": {
-								"$ref": "AAAAAAGVuw+bQerR8vM="
+								"$ref": "AAAAAAGWAwkSD8IFXlM="
 							}
 						}
 					],
@@ -9235,6 +9253,7 @@
 							},
 							"name": "cod_estado",
 							"stereotype": "",
+							"visibility": "private",
 							"type": "int"
 						},
 						{
@@ -9253,6 +9272,7 @@
 								"$ref": "AAAAAAGWAwd4C6KCRGs="
 							},
 							"name": "nome",
+							"visibility": "private",
 							"type": "String"
 						}
 					],
@@ -9290,6 +9310,17 @@
 								"$ref": "AAAAAAGWAwkSD8IFXlM="
 							},
 							"name": "cod_cidade",
+							"visibility": "private",
+							"type": "int"
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGWt2MBec3Yvq0=",
+							"_parent": {
+								"$ref": "AAAAAAGWAwkSD8IFXlM="
+							},
+							"name": "cod_estado",
+							"visibility": "private",
 							"type": "int"
 						},
 						{
@@ -9299,6 +9330,7 @@
 								"$ref": "AAAAAAGWAwkSD8IFXlM="
 							},
 							"name": "nome",
+							"visibility": "private",
 							"type": "String"
 						}
 					],

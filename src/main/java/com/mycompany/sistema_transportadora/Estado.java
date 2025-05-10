@@ -4,7 +4,6 @@ import java.util.*;
 
 public class Estado {
     public int cod_estado;
-    public int cod_cidade;
     public String nome;
 
     public Estado() {

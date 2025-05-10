@@ -5,18 +5,19 @@ import java.util.List;
 
 public class Cidade {
     private static final List<Cidade> cidades = new ArrayList<>();
+    private int cod_estado = new Estado().cod_estado; 
 
-    private int codCidade;
+    private int cod_cidade;
     private String nome;
 
-    public Cidade(int codCidade, String nome) {
-        this.codCidade = codCidade;
+    public Cidade(int cod_cidade, String nome) {
+        this.cod_cidade = cod_cidade;
         this.nome = nome;
     }
 
     //Getters
-    public int getCodCidade(){
-        return codCidade;
+    public int getcod_cidade(){
+        return cod_cidade;
     }
 
     public String getNome(){
@@ -56,7 +57,7 @@ public class Cidade {
         cidades.remove(codigo - 1);
 
         for (int i = 0; i < cidades.size(); i++) {
-            cidades.get(i).codCidade = i + 1;
+            cidades.get(i).cod_cidade = i + 1;
         }
     }
 }
