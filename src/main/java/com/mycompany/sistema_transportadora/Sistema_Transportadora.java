@@ -6,9 +6,9 @@ public class Sistema_Transportadora {
     public static void main(String[] args){
         Scanner scn = new Scanner(System.in);
         System.out.println("Informe o nome da Cidade: ");
-        Cidade.AdicionarCidade(1, scn.next());
-        scn.close();
+        Cidade.AdicionarCidade(1, scn.nextLine());
 
-        Cidade.ListarAtivas();
+        System.out.println(Cidade.ListarAtivas());
+        scn.close();
     }
 }
