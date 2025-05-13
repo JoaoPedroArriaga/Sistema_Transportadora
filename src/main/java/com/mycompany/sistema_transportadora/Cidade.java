@@ -1,8 +1,6 @@
 package com.mycompany.sistema_transportadora;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class Cidade {
     private static final List<Cidade> cidades = new ArrayList<>();
@@ -28,37 +26,12 @@ public final class Cidade {
         return nome;
     }
 
-    private int getCodEstado(){
+    public int getCodEstado(){
         return cod_estado;
     }
 
     public boolean isAtiva() {
         return ativa;
-    }
-
-    // Métodos estáticos
-    public static void AdicionarCidade(int cod_estado, String nome) {
-        ValidarNome(nome);
-        ValidarCidade(cod_estado, nome);
-        cidades.add(new Cidade(cidades.size() + 1, cod_estado, nome));
-    }
-
-    public static void DesativarCidade(int cod_cidade) {
-        ValidarCodCidade(cod_cidade);
-        cidades.get(cod_cidade - 1).ativa = false;
-    }
-
-    public static Cidade BuscarPorCodCidade(int cod_cidade) {
-        ValidarCodCidade(cod_cidade);
-        return cidades.get(cod_cidade - 1);
-    }
-
-    public static List<Cidade> ListarAtivas() {
-        List<Cidade> ativas = new ArrayList<>();
-        for (Cidade c : cidades) {
-            if (c.ativa) ativas.add(c);
-        }
-        return Collections.unmodifiableList(ativas);
     }
 
     // Validações
@@ -82,7 +55,35 @@ public final class Cidade {
 
     private static boolean CidadeExiste(int cod_estado, String nome){
         return cidades.stream().anyMatch(c -> c.getNome().equalsIgnoreCase(nome.trim()) 
-                                        && c.getCodEstado() == cod_estado);
+                                         && c.getCodEstado() == cod_estado);
+    }
+
+    //Métodos CRUD
+
+    public static void AdicionarCidade(int cod_estado, String nome) {
+        ValidarNome(nome);
+        ValidarCidade(cod_estado, nome);
+        cidades.add(new Cidade(cidades.size() + 1, cod_estado, nome));
+    }
+
+    public static void DesativarCidade(int cod_cidade) {
+        ValidarCodCidade(cod_cidade);
+        cidades.get(cod_cidade - 1).ativa = false;
+    }
+
+    //Métodos de consulta
+
+    public static Cidade BuscarPorCodCidade(int cod_cidade) {
+        ValidarCodCidade(cod_cidade);
+        return cidades.get(cod_cidade - 1);
+    }
+
+    public static List<Cidade> ListarAtivas() {
+        List<Cidade> ativas = new ArrayList<>();
+        for (Cidade c : cidades) {
+            if (c.ativa) ativas.add(c);
+        }
+        return Collections.unmodifiableList(ativas);
     }
 
     @Override
