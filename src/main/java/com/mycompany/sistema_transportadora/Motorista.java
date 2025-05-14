@@ -8,7 +8,7 @@ public class Motorista {
     public String sobrenome;
     public String cnh;
     public String telefone;
-    public Status_Motorista status;
+    public Status_Motorista Status;
 
     public Motorista() {
     }

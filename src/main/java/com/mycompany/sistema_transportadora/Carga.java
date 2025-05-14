@@ -9,7 +9,7 @@ public class Carga {
     public float peso;
     public float volume;
     public int quantidade;
-    public Status_Carga status;
+    public Status_Carga Status;
 
     public Carga() {
     }

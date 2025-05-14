@@ -50,7 +50,7 @@ public class Estado {
     }
 
     private static boolean EstadoExiste(String nome){
-        return estados.stream().anyMatch(c -> c.getNome().equalsIgnoreCase(nome.trim()));
+        return estados.stream().anyMatch(e -> e.getNome().equalsIgnoreCase(nome.trim()));
     }
 
      //Métodos CRUD

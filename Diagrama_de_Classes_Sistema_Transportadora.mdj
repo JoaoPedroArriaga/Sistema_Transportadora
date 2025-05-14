@@ -186,7 +186,7 @@
 											"top": 107,
 											"width": 216.41064453125,
 											"height": 13,
-											"text": "+status: Status_Veiculo",
+											"text": "+Status_Rota: Status_Rota_Veiculo",
 											"horizontalAlignment": 0
 										},
 										{
@@ -655,7 +655,7 @@
 											"top": 519,
 											"width": 171.6025390625,
 											"height": 13,
-											"text": "+status: Status_Rota",
+											"text": "+Status_Rota: Status_Rota_Rota",
 											"horizontalAlignment": 0
 										}
 									],
@@ -1039,7 +1039,7 @@
 											"top": 152,
 											"width": 128.99072265625,
 											"height": 13,
-											"text": "+status: Status_Carga",
+											"text": "+Status_Rota: Status_Rota_Carga",
 											"horizontalAlignment": 0
 										}
 									],
@@ -3600,7 +3600,7 @@
 											"top": 681,
 											"width": 147.04345703125,
 											"height": 13,
-											"text": "+status: Status_Motorista",
+											"text": "+Status_Rota: Status_Rota_Motorista",
 											"horizontalAlignment": 0
 										}
 									],
@@ -5753,7 +5753,7 @@
 											"top": 292,
 											"width": 216.08056640625,
 											"height": 13,
-											"text": "Status_Rota"
+											"text": "Status_Rota_Rota"
 										},
 										{
 											"_type": "LabelView",
@@ -6022,7 +6022,7 @@
 											"top": 52,
 											"width": 233.6064453125,
 											"height": 13,
-											"text": "Status_Veiculo"
+											"text": "Status_Rota_Veiculo"
 										},
 										{
 											"_type": "LabelView",
@@ -6291,7 +6291,7 @@
 											"top": 44,
 											"width": 191.46435546875,
 											"height": 13,
-											"text": "Status_Carga"
+											"text": "Status_Rota_Carga"
 										},
 										{
 											"_type": "LabelView",
@@ -6543,7 +6543,7 @@
 											"top": 596,
 											"width": 197.25341796875,
 											"height": 13,
-											"text": "Status_Motorista"
+											"text": "Status_Rota_Motorista"
 										},
 										{
 											"_type": "LabelView",
@@ -7942,7 +7942,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGVusn/EZulaCM="
 							},
-							"name": "status",
+							"name": "Status_Rota",
 							"type": {
 								"$ref": "AAAAAAGWAc70Kc+L1NE="
 							}
@@ -8161,7 +8161,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGVusvSMJvQGUM="
 							},
-							"name": "status",
+							"name": "Status_Rota",
 							"type": {
 								"$ref": "AAAAAAGV3yjte6MpHaA="
 							}
@@ -8309,7 +8309,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGVusv+AJv6dG0="
 							},
-							"name": "status",
+							"name": "Status_Rota",
 							"type": {
 								"$ref": "AAAAAAGWAdMQmAp0o4g="
 							}
@@ -8726,7 +8726,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGV3wJAxQhSfAE="
 							},
-							"name": "status",
+							"name": "Status_Rota",
 							"type": {
 								"$ref": "AAAAAAGWAdltyTjXFLU="
 							}
@@ -8994,7 +8994,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Status_Rota",
+					"name": "Status_Rota_Rota",
 					"literals": [
 						{
 							"_type": "UMLEnumerationLiteral",
@@ -9040,7 +9040,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Status_Veiculo",
+					"name": "Status_Rota_Veiculo",
 					"literals": [
 						{
 							"_type": "UMLEnumerationLiteral",
@@ -9086,7 +9086,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Status_Carga",
+					"name": "Status_Rota_Carga",
 					"literals": [
 						{
 							"_type": "UMLEnumerationLiteral",
@@ -9123,7 +9123,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Status_Motorista",
+					"name": "Status_Rota_Motorista",
 					"literals": [
 						{
 							"_type": "UMLEnumerationLiteral",

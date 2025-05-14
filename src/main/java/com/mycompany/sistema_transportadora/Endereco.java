@@ -2,8 +2,6 @@ package com.mycompany.sistema_transportadora;
 
 import java.util.*;
 
-import javax.print.DocFlavor.STRING;
-
 public class Endereco {
     private static final List<Endereco> enderecos = new ArrayList<>();
 
@@ -77,7 +75,7 @@ public class Endereco {
 
     //Métodos CRUD
 
-    public static void Adicionar_Endereco(String logradouro, Estado estado, Cidade cidade) {
+    public static void AdicionarEndereco(String logradouro, Estado estado, Cidade cidade) {
         ValidarLogradouro(logradouro);
         ValidarCidade(cidade);
         ValidarEstado(estado);
@@ -87,7 +85,7 @@ public class Endereco {
         enderecos.add(new Endereco(novoCodigo, logradouro, estado, cidade));
     }
 
-    public void Atualizar_Endereco(int cod_endereco, String novo_logradouro, Estado novo_estado, Cidade nova_cidade) {
+    public void AtualizarEndereco(int cod_endereco, String novo_logradouro, Estado novo_estado, Cidade nova_cidade) {
         ValidarCodEndereco(cod_endereco);
         ValidarLogradouro(novo_logradouro);
         ValidarCidade(nova_cidade);
@@ -100,7 +98,7 @@ public class Endereco {
         endereco.estado = novo_estado; 
     }
 
-    public void Excluir_Endereco(int cod_endereco) {
+    public void DesativarEndereco(int cod_endereco) {
         ValidarCodEndereco(cod_endereco);
         enderecos.get(cod_endereco - 1).ativo = false;
     }

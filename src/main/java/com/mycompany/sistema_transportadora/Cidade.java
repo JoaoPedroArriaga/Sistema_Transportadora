@@ -49,7 +49,7 @@ public final class Cidade {
 
     private static void ValidarCidade(int cod_estado, String nome){
         if (CidadeExiste(cod_estado, nome)){
-            throw new IllegalArgumentException("A cidade" + nome +"já existe");
+            throw new IllegalArgumentException("A cidade " + nome + " já existe");
         }
     }
 

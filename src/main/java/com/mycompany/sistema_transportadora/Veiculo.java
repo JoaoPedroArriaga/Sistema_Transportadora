@@ -6,7 +6,7 @@ public class Veiculo {
     public int cod_veiculo;
     public Tipo_Veiculo tipo;
     public String placa;
-    public Status_Veiculo status;
+    public Status_Veiculo Status;
     public float peso_maximo_transportavel;
     public float volume_maximo_transportavel;
     public int ano_fabricacao;
