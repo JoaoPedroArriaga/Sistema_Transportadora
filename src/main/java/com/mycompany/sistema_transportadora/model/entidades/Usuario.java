@@ -1,5 +1,6 @@
-package com.mycompany.sistema_transportadora;
+package com.mycompany.sistema_transportadora.model.entidades;
 
+import com.mycompany.sistema_transportadora.model.enums.*;
 import java.util.*;
 
 public class Usuario {
@@ -11,7 +12,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public void Adicionar_Usuario() {
+    public void adicionar_Usuario() {
         // TODO implement here
     }
 

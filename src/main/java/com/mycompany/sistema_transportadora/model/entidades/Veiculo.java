@@ -1,5 +1,6 @@
-package com.mycompany.sistema_transportadora;
+package com.mycompany.sistema_transportadora.model.entidades;
 
+import com.mycompany.sistema_transportadora.model.enums.*;
 import java.util.*;
 
 public class Veiculo {
@@ -16,7 +17,7 @@ public class Veiculo {
     public Veiculo() {
     }
 
-    public void Adicionar_Veiculo() {
+    public void adicionar_Veiculo() {
         // TODO implement here
     }
 

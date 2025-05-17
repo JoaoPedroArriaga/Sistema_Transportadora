@@ -1,4 +1,4 @@
-package com.mycompany.sistema_transportadora;
+package com.mycompany.sistema_transportadora.model.enums;
 
 public enum Tipo_Veiculo {
     CAMINHAO_BAU,

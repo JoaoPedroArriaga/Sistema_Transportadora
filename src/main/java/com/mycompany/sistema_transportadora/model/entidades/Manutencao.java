@@ -1,4 +1,4 @@
-package com.mycompany.sistema_transportadora;
+package com.mycompany.sistema_transportadora.model.entidades;
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ public class Manutencao {
     public Manutencao() {
     }
 
-    public void Registrar_Manutencao() {
+    public void registrar_Manutencao() {
         // TODO implement here
     }
 

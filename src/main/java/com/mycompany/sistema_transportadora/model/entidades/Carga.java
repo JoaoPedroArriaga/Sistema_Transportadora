@@ -1,5 +1,7 @@
-package com.mycompany.sistema_transportadora;
+package com.mycompany.sistema_transportadora.model.entidades;
 
+import com.mycompany.sistema_transportadora.model.enums.Status_Carga;
+import com.mycompany.sistema_transportadora.model.enums.Tipo_Carga;
 import java.util.*;
 
 public class Carga {
@@ -14,7 +16,7 @@ public class Carga {
     public Carga() {
     }
 
-    public void Adicionar_Carga() {
+    public void adicionar_Carga() {
         // TODO implement here
     }
 

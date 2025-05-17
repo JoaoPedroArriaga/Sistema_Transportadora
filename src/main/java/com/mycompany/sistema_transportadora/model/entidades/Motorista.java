@@ -1,5 +1,6 @@
-package com.mycompany.sistema_transportadora;
+package com.mycompany.sistema_transportadora.model.entidades;
 
+import com.mycompany.sistema_transportadora.model.enums.Status_Motorista;
 import java.util.*;
 
 public class Motorista {

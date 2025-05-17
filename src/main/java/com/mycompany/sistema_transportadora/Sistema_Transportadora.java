@@ -1,5 +1,9 @@
 package com.mycompany.sistema_transportadora;
 
+import com.mycompany.sistema_transportadora.model.entidades.*;
+import com.mycompany.sistema_transportadora.model.enums.StatusRota;
+import com.mycompany.sistema_transportadora.utils.EncodingFixer;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
@@ -30,19 +34,19 @@ public class Sistema_Transportadora {
             
             switch (opcao) {
                 case 1:
-                    MenuEstados(scanner);
+                    menuEstados(scanner);
                     break;
                 case 2:
-                    MenuCidades(scanner);
+                    menuCidades(scanner);
                     break;
                 case 3:
-                    MenuEnderecos(scanner);
+                    menuEnderecos(scanner);
                     break;
                 case 4:
-                    MenuParada(scanner);
+                    menuParadas(scanner);
                     break;
                 case 5:
-                    MenuRotas(scanner);
+                    menuRotas(scanner);
                     break;
                 case 0:
                     System.out.println("Saindo do sistema...");
@@ -57,19 +61,19 @@ public class Sistema_Transportadora {
 
     private static void cadastrarDadosIniciais() {
         // Cadastra alguns estados para teste
-        Estado.RegistrarEstado("São Paulo");
-        Estado.RegistrarEstado("Rio de Janeiro");
-        Estado.RegistrarEstado("Minas Gerais");
+        Estado.registrarEstado("São Paulo");
+        Estado.registrarEstado("Rio de Janeiro");
+        Estado.registrarEstado("Minas Gerais");
         
         // Cadastra algumas cidades para teste
-        Cidade.AdicionarCidade(1, "São Paulo");
-        Cidade.AdicionarCidade(1, "Campinas");
-        Cidade.AdicionarCidade(2, "Rio de Janeiro");
-        Cidade.AdicionarCidade(2, "Niterói");
-        Cidade.AdicionarCidade(3, "Belo Horizonte");
+        Cidade.adicionarCidade(1, "São Paulo");
+        Cidade.adicionarCidade(1, "Campinas");
+        Cidade.adicionarCidade(2, "Rio de Janeiro");
+        Cidade.adicionarCidade(2, "Niterói");
+        Cidade.adicionarCidade(3, "Belo Horizonte");
     }
 
-    private static void MenuEstados(Scanner scanner) {
+    private static void menuEstados(Scanner scanner) {
         int opcao;
         do {
             System.out.println("\n--- GERENCIAR ESTADOS ---");
@@ -85,13 +89,13 @@ public class Sistema_Transportadora {
             switch (opcao) {
                 case 1:
                     System.out.println("\nEstados ativos:");
-                    Estado.ListarAtivos().forEach(System.out::println);
+                    Estado.listarAtivos().forEach(System.out::println);
                     break;
                 case 2:
                     System.out.print("Informe o nome do novo estado: ");
                     String nomeEstado = scanner.nextLine();
                     try {
-                        Estado.RegistrarEstado(nomeEstado);
+                        Estado.registrarEstado(nomeEstado);
                         System.out.println("Estado cadastrado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Erro: " + e.getMessage());
@@ -99,11 +103,11 @@ public class Sistema_Transportadora {
                     break;
                 case 3:
                     System.out.println("\nEstados ativos:");
-                    Estado.ListarAtivos().forEach(System.out::println);
+                    Estado.listarAtivos().forEach(System.out::println);
                     System.out.print("Informe o código do estado a desativar: ");
                     int codEstado = scanner.nextInt();
                     try {
-                        Estado.DesativarEstado(codEstado);
+                        Estado.desativarEstado(codEstado);
                         System.out.println("Estado desativado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Erro: " + e.getMessage());
@@ -117,7 +121,7 @@ public class Sistema_Transportadora {
         } while (opcao != 0);
     }
 
-    private static void MenuCidades(Scanner scanner) {
+    private static void menuCidades(Scanner scanner) {
         int opcao;
         do {
             System.out.println("\n--- GERENCIAR CIDADES ---");
@@ -133,18 +137,18 @@ public class Sistema_Transportadora {
             switch (opcao) {
                 case 1:
                     System.out.println("\nCidades ativas:");
-                    Cidade.ListarAtivas().forEach(System.out::println);
+                    Cidade.listarAtivas().forEach(System.out::println);
                     break;
                 case 2:
                     System.out.println("\nEstados disponíveis:");
-                    Estado.ListarAtivos().forEach(e -> System.out.println(e.getCodEstado() + " - " + e.getNome()));
+                    Estado.listarAtivos().forEach(e -> System.out.println(e.getCodigo() + " - " + e.getNome()));
                     System.out.print("Informe o código do estado: ");
                     int codEstado = scanner.nextInt();
                     scanner.nextLine();
                     System.out.print("Informe o nome da nova cidade: ");
                     String nomeCidade = scanner.nextLine();
                     try {
-                        Cidade.AdicionarCidade(codEstado, nomeCidade);
+                        Cidade.adicionarCidade(codEstado, nomeCidade);
                         System.out.println("Cidade cadastrada com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Erro: " + e.getMessage());
@@ -152,11 +156,11 @@ public class Sistema_Transportadora {
                     break;
                 case 3:
                     System.out.println("\nCidades ativas:");
-                    Cidade.ListarAtivas().forEach(System.out::println);
+                    Cidade.listarAtivas().forEach(System.out::println);
                     System.out.print("Informe o código da cidade a desativar: ");
                     int codCidade = scanner.nextInt();
                     try {
-                        Cidade.DesativarCidade(codCidade);
+                        Cidade.desativarCidade(codCidade);
                         System.out.println("Cidade desativada com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Erro: " + e.getMessage());
@@ -170,14 +174,14 @@ public class Sistema_Transportadora {
         } while (opcao != 0);
     }
 
-    private static void MenuEnderecos(Scanner scanner) {
+    private static void menuEnderecos(Scanner scanner) {
         int opcao;
         do {
             System.out.println("\n--- GERENCIAR ENDEREÇOS ---");
             System.out.println("1. Listar endereços ativos");
             System.out.println("2. Adicionar novo endereço");
             System.out.println("3. Atualizar endereço");
-            System.out.println("4. Excluir endereço");
+            System.out.println("4. Desativar endereço");
             System.out.println("0. Voltar");
             System.out.print("Escolha uma opção: ");
             
@@ -187,7 +191,7 @@ public class Sistema_Transportadora {
             switch (opcao) {
                 case 1:
                     System.out.println("\nEndereços ativos:");
-                    Endereco.ListarAtivos().forEach(System.out::println);
+                    Endereco.listarAtivos().forEach(System.out::println);
                     break;
                 case 2:
                     adicionarEndereco(scanner);
@@ -196,7 +200,7 @@ public class Sistema_Transportadora {
                     atualizarEndereco(scanner);
                     break;
                 case 4:
-                    excluirEndereco(scanner);
+                    desativarEndereco(scanner);
                     break;
                 case 0:
                     break;
@@ -210,16 +214,16 @@ public class Sistema_Transportadora {
         System.out.println("\n--- ADICIONAR ENDEREÇO ---");
         
         System.out.println("Estados disponíveis:");
-        Estado.ListarAtivos().forEach(e -> System.out.println(e.getCodEstado() + " - " + e.getNome()));
+        Estado.listarAtivos().forEach(e -> System.out.println(e.getCodigo() + " - " + e.getNome()));
         
         System.out.print("Selecione o código do estado: ");
         int codEstado = scanner.nextInt();
         scanner.nextLine();
         
         System.out.println("Cidades disponíveis neste estado:");
-        Cidade.ListarAtivas().stream()
+        Cidade.listarAtivas().stream()
             .filter(c -> c.getCodEstado() == codEstado)
-            .forEach(c -> System.out.println(c.getCodCidade() + " - " + c.getNome()));
+            .forEach(c -> System.out.println(c.getCodigo() + " - " + c.getNome()));
         
         System.out.print("Selecione o código da cidade: ");
         int codCidade = scanner.nextInt();
@@ -229,9 +233,9 @@ public class Sistema_Transportadora {
         String logradouro = scanner.nextLine();
         
         try {
-            Estado estado = Estado.BuscarPorCodEstado(codEstado);
-            Cidade cidade = Cidade.BuscarPorCodCidade(codCidade);
-            Endereco.AdicionarEndereco(logradouro, estado, cidade);
+            Estado estado = Estado.buscarEstado(codEstado);
+            Cidade cidade = Cidade.buscarCidade(codCidade);
+            Endereco.adicionarEndereco(logradouro, estado, cidade);
             System.out.println("Endereço adicionado com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
@@ -242,23 +246,23 @@ public class Sistema_Transportadora {
         System.out.println("\n--- ATUALIZAR ENDEREÇO ---");
         
         System.out.println("Endereços disponíveis:");
-        Endereco.ListarAtivos().forEach(System.out::println);
+        Endereco.listarAtivos().forEach(System.out::println);
         
         System.out.print("Selecione o código do endereço: ");
         int codEndereco = scanner.nextInt();
         scanner.nextLine();
         
         System.out.println("Estados disponíveis:");
-        Estado.ListarAtivos().forEach(e -> System.out.println(e.getCodEstado() + " - " + e.getNome()));
+        Estado.listarAtivos().forEach(e -> System.out.println(e.getCodigo() + " - " + e.getNome()));
         
         System.out.print("Selecione o novo código do estado: ");
         int codEstado = scanner.nextInt();
         scanner.nextLine();
         
         System.out.println("Cidades disponíveis neste estado:");
-        Cidade.ListarAtivas().stream()
+        Cidade.listarAtivas().stream()
             .filter(c -> c.getCodEstado() == codEstado)
-            .forEach(c -> System.out.println(c.getCodCidade() + " - " + c.getNome()));
+            .forEach(c -> System.out.println(c.getCodigo() + " - " + c.getNome()));
         
         System.out.print("Selecione o novo código da cidade: ");
         int codCidade = scanner.nextInt();
@@ -268,76 +272,74 @@ public class Sistema_Transportadora {
         String logradouro = scanner.nextLine();
         
         try {
-            Estado estado = Estado.BuscarPorCodEstado(codEstado);
-            Cidade cidade = Cidade.BuscarPorCodCidade(codCidade);
-            Endereco endereco = Endereco.BuscarPorCodigo(codEndereco);
-            endereco.AtualizarEndereco(codEndereco, logradouro, estado, cidade);
+            Estado estado = Estado.buscarEstado(codEstado);
+            Cidade cidade = Cidade.buscarCidade(codCidade);
+            Endereco endereco = Endereco.buscarEndereco(codEndereco);
+            endereco.atualizar(logradouro, estado, cidade);
             System.out.println("Endereço atualizado com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
     }
 
-    private static void excluirEndereco(Scanner scanner) {
-        System.out.println("\n--- EXCLUIR ENDEREÇO ---");
+    private static void desativarEndereco(Scanner scanner) {
+        System.out.println("\n--- DESATIVAR ENDEREÇO ---");
         
         System.out.println("Endereços disponíveis:");
-        Endereco.ListarAtivos().forEach(System.out::println);
+        Endereco.listarAtivos().forEach(System.out::println);
         
         System.out.print("Selecione o código do endereço: ");
         int codEndereco = scanner.nextInt();
         scanner.nextLine();
         
         try {
-            Endereco endereco = Endereco.BuscarPorCodigo(codEndereco);
-            endereco.DesativarEndereco(codEndereco);
-            System.out.println("Endereço excluído com sucesso!");
+            Endereco.desativarEndereco(codEndereco);
+            System.out.println("Endereço desativado com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
     }
 
-    private static void MenuParada(Scanner scanner) {
-    int opcao;
-    do {
-        System.out.println("\n--- MENU PARADA ---");
-        System.out.println("1. Adicionar Parada");
-        System.out.println("2. Registrar Chegada na Parada");
-        System.out.println("3. Listar Paradas Ativas");
-        System.out.println("4. Desativar Parada");
-        System.out.println("0. Voltar");
-        System.out.print("Escolha uma opção: ");
-        
-        opcao = scanner.nextInt();
-        scanner.nextLine(); // Limpar buffer
-        
-        switch (opcao) {
-            case 1:
-                AdicionarParadaUI(scanner);
-                break;
-            case 2:
-                RegistrarChegadaUI(scanner);
-                break;
-            case 3:
-                ListarParadasUI();
-                break;
-            case 4:
-                DesativarParadaUI(scanner);
-                break;
-            case 0:
-                break;
-            default:
-                System.out.println("Opção inválida!");
-        }
-    } while (opcao != 0);
-}
+    private static void menuParadas(Scanner scanner) {
+        int opcao;
+        do {
+            System.out.println("\n--- GERENCIAR PARADAS ---");
+            System.out.println("1. Adicionar parada");
+            System.out.println("2. Registrar chegada na parada");
+            System.out.println("3. Listar paradas ativas");
+            System.out.println("4. Desativar parada");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine(); // Limpar buffer
+            
+            switch (opcao) {
+                case 1:
+                    adicionarParada(scanner);
+                    break;
+                case 2:
+                    registrarChegadaParada(scanner, false);
+                    break;
+                case 3:
+                    listarParadasAtivas();
+                    break;
+                case 4:
+                    desativarParada(scanner);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
 
-    private static void AdicionarParadaUI(Scanner scanner) {
+    private static void adicionarParada(Scanner scanner) {
         System.out.println("\n--- ADICIONAR PARADA ---");
         
-        // Listar endereços ativos
         System.out.println("Endereços disponíveis:");
-        Endereco.ListarAtivos().forEach(e -> System.out.println(e.getCodEndereco() + " - " + e.getLogradouro()));
+        Endereco.listarAtivos().forEach(e -> System.out.println(e.getCodigo() + " - " + e.getLogradouro()));
         
         System.out.print("Selecione o código do endereço: ");
         int codEndereco = scanner.nextInt();
@@ -347,7 +349,7 @@ public class Sistema_Transportadora {
         System.out.print("Dia (1-31): ");
         int dia = scanner.nextInt();
         System.out.print("Mês (1-12): ");
-        int mes = scanner.nextInt() - 1; // Calendar.MONTH é 0-based
+        int mes = scanner.nextInt() - 1;
         System.out.print("Ano: ");
         int ano = scanner.nextInt();
         System.out.print("Hora (0-23): ");
@@ -360,42 +362,67 @@ public class Sistema_Transportadora {
         dataHoraPrevista.set(ano, mes, dia, hora, minuto);
         
         try {
-            Endereco endereco = Endereco.BuscarPorCodigo(codEndereco);
-            Parada.AdicionarParada(endereco, dataHoraPrevista);
+            Endereco endereco = Endereco.buscarEndereco(codEndereco);
+            Parada.adicionarParada(endereco, dataHoraPrevista);
             System.out.println("Parada adicionada com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
     }
 
-    private static void RegistrarChegadaUI(Scanner scanner) {
-        System.out.println("\n--- REGISTRAR CHEGADA ---");
-        
-        System.out.println("Paradas ativas:");
-        Parada.listarAtivas().forEach(p -> System.out.println(p.getCodParada() + " - " + p.getLocal().getLogradouro()));
-        
-        System.out.print("Selecione o código da parada: ");
-        int codParada = scanner.nextInt();
-        scanner.nextLine();
-        
-        Calendar dataHoraReal = Calendar.getInstance();
-        System.out.println("Data/hora real registrada: " + 
-            String.format("%02d/%02d/%04d %02d:%02d",
-                dataHoraReal.get(Calendar.DAY_OF_MONTH),
-                dataHoraReal.get(Calendar.MONTH) + 1,
-                dataHoraReal.get(Calendar.YEAR),
-                dataHoraReal.get(Calendar.HOUR_OF_DAY),
-                dataHoraReal.get(Calendar.MINUTE)));
-        
-        try {
-            Parada.RegistrarChegada(codParada, dataHoraReal);
-            System.out.println("Chegada registrada com sucesso!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro: " + e.getMessage());
+   private static void registrarChegadaParada(Scanner scanner, boolean mostrarContextoRota) {
+    System.out.println("\n--- REGISTRAR CHEGADA ---");
+    
+    if (mostrarContextoRota) {
+        // Lista rotas em andamento com suas paradas (versão detalhada)
+        List<Rota> rotasEmAndamento = Rota.listarAtivas().stream()
+            .filter(r -> r.getStatus() == StatusRota.EM_ANDAMENTO)
+            .toList();
+
+        if (rotasEmAndamento.isEmpty()) {
+            System.out.println("Nenhuma rota em andamento.");
+            return;
         }
+
+        System.out.println("Rotas em andamento:");
+        rotasEmAndamento.forEach(r -> {
+            System.out.println("\nRota " + r.getCodigo() + ": " + 
+                r.getOrigem().getCidade().getNome() + " → " + 
+                r.getDestino().getCidade().getNome());
+            
+            System.out.println("Paradas:");
+            r.getParadas().forEach(p -> {
+                System.out.println("  " + p.getCodigo() + " - " + 
+                    p.getLocal().getLogradouro() + 
+                    (p.getDataHoraReal() == null ? " (pendente)" : " (concluída)"));
+            });
+        });
+    } else {
+        // Versão simplificada (apenas lista de paradas)
+        System.out.println("Paradas disponíveis:");
+        Parada.listarAtivas().forEach(p -> {
+            String status = (p.getDataHoraReal() == null) ? "Pendente" : "Concluída";
+            System.out.println(p.getCodigo() + " - " + 
+                p.getLocal().getLogradouro() + " (" + status + ")");
+        });
     }
 
-    private static void ListarParadasUI() {
+    System.out.print("\nInforme o código da parada: ");
+    int codParada = scanner.nextInt();
+    scanner.nextLine();
+    
+    System.out.println("Registrando data/hora de chegada...");
+    Calendar dataChegada = Calendar.getInstance();
+    
+    try {
+        Parada.registrarChegada(codParada, dataChegada);
+        System.out.println("Chegada registrada com sucesso em: " + formatarData(dataChegada));
+    } catch (Exception e) {
+        System.out.println("Erro: " + e.getMessage());
+    }
+}
+
+    private static void listarParadasAtivas() {
         System.out.println("\n--- PARADAS ATIVAS ---");
         List<Parada> ativas = Parada.listarAtivas();
         if (ativas.isEmpty()) {
@@ -405,24 +432,25 @@ public class Sistema_Transportadora {
         }
     }
 
-    private static void DesativarParadaUI(Scanner scanner) {
+    private static void desativarParada(Scanner scanner) {
         System.out.println("\n--- DESATIVAR PARADA ---");
         
         System.out.println("Paradas ativas:");
-        Parada.listarAtivas().forEach(p -> System.out.println(p.getCodParada() + " - " + p.getLocal().getLogradouro()));
+        Parada.listarAtivas().forEach(p -> System.out.println(p.getCodigo() + " - " + p.getLocal().getLogradouro()));
         
         System.out.print("Selecione o código da parada a desativar: ");
         int codParada = scanner.nextInt();
         scanner.nextLine();
         
         try {
-            Parada.DesativarParada(codParada);
+            Parada.desativarParada(codParada);
             System.out.println("Parada desativada com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
     }
-        private static void MenuRotas(Scanner scanner) {
+
+    private static void menuRotas(Scanner scanner) {
         int opcao;
         do {
             System.out.println("\n--- GERENCIAR ROTAS ---");
@@ -454,7 +482,7 @@ public class Sistema_Transportadora {
                     iniciarRota(scanner);
                     break;
                 case 5:
-                    registrarChegadaParada(scanner);
+                    registrarChegadaParada(scanner,true);
                     break;
                 case 6:
                     finalizarRota(scanner);
@@ -475,15 +503,15 @@ public class Sistema_Transportadora {
 
     private static void listarRotasAtivas() {
         System.out.println("\n--- ROTAS ATIVAS ---");
-        List<Rota> rotasAtivas = Rota.ListarAtivas();
+        List<Rota> rotasAtivas = Rota.listarAtivas();
         if (rotasAtivas.isEmpty()) {
             System.out.println("Nenhuma rota cadastrada.");
         } else {
             rotasAtivas.forEach(rota -> {
-                System.out.println("[" + rota.getCodRota() + "] " + 
+                System.out.println("[" + rota.getCodigo() + "] " + 
                     rota.getOrigem().getCidade().getNome() + " → " + 
                     rota.getDestino().getCidade().getNome() + 
-                    " - " + rota.getStatus_Rota());
+                    " - " + rota.getStatus());
             });
         }
     }
@@ -491,14 +519,14 @@ public class Sistema_Transportadora {
     private static void criarNovaRota(Scanner scanner) {
         System.out.println("\n--- NOVA ROTA ---");
         
-        // Listar veículos disponíveis (simulação)
+        // listar veículos disponíveis (simulação)
         System.out.println("Veículos disponíveis:");
         System.out.println("1 - Caminhão BA-1234");
         System.out.println("2 - Van SP-5678");
         System.out.print("Selecione o veículo: ");
         int codVeiculo = scanner.nextInt();
         
-        // Listar cargas disponíveis (simulação)
+        // listar cargas disponíveis (simulação)
         System.out.println("\nCargas disponíveis:");
         System.out.println("1 - Eletrônicos (500kg)");
         System.out.println("2 - Móveis (1200kg)");
@@ -513,7 +541,7 @@ public class Sistema_Transportadora {
         Endereco destino = selecionarEndereco(scanner);
         
         try {
-            Rota.AdicionarRota(codVeiculo, codCarga, origem, destino);
+            Rota.adicionarRota(codVeiculo, codCarga, origem, destino);
             System.out.println("\nRota criada com sucesso!");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
@@ -521,9 +549,9 @@ public class Sistema_Transportadora {
     }
 
     private static Endereco selecionarEndereco(Scanner scanner) {
-        List<Endereco> enderecosAtivos = Endereco.ListarAtivos();
+        List<Endereco> enderecosAtivos = Endereco.listarAtivos();
         enderecosAtivos.forEach(e -> {
-            System.out.println(e.getCodEndereco() + " - " + 
+            System.out.println(e.getCodigo() + " - " + 
                 e.getLogradouro() + ", " + 
                 e.getCidade().getNome() + "/" + 
                 e.getEstado().getNome());
@@ -533,7 +561,7 @@ public class Sistema_Transportadora {
         int codEndereco = scanner.nextInt();
         scanner.nextLine();
         
-        return Endereco.BuscarPorCodigo(codEndereco);
+        return Endereco.buscarEndereco(codEndereco);
     }
 
     private static void adicionarParadaARota(Scanner scanner) {
@@ -551,14 +579,8 @@ public class Sistema_Transportadora {
         Calendar dataHoraPrevista = lerDataHora(scanner);
         
         try {
-            // Cria uma nova parada (que automaticamente é adicionada à lista estática)
-            Parada.AdicionarParada(enderecoParada, dataHoraPrevista);
-            
-            // Obtém a última parada criada
-            Parada novaParada = Parada.buscarPorCodigo(Parada.listarAtivas().size());
-            
-            // Adiciona à rota selecionada
-            Rota.AdicionarParada(codRota, novaParada);
+            Parada novaParada = Parada.adicionarParada(enderecoParada, dataHoraPrevista);
+            Rota.adicionarParada(codRota, novaParada);
             System.out.println("Parada adicionada com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -585,8 +607,8 @@ public class Sistema_Transportadora {
 
     private static void iniciarRota(Scanner scanner) {
         System.out.println("\n--- INICIAR ROTA ---");
-        List<Rota> rotasPlanejadas = Rota.ListarAtivas().stream()
-            .filter(r -> r.getStatus_Rota() == Status_Rota.PLANEJADA)
+        List<Rota> rotasPlanejadas = Rota.listarAtivas().stream()
+            .filter(r -> r.getStatus() == StatusRota.PLANEJADA)
             .toList();
         
         if (rotasPlanejadas.isEmpty()) {
@@ -595,7 +617,7 @@ public class Sistema_Transportadora {
         }
         
         rotasPlanejadas.forEach(r -> {
-            System.out.println(r.getCodRota() + " - " + 
+            System.out.println(r.getCodigo() + " - " + 
                 r.getOrigem().getCidade().getNome() + " → " + 
                 r.getDestino().getCidade().getNome());
         });
@@ -608,55 +630,8 @@ public class Sistema_Transportadora {
         Calendar dataPartida = Calendar.getInstance();
         
         try {
-            Rota.IniciarRota(codRota, dataPartida);
-            System.out.println("Rota iniciada com sucesso em " + 
-                dataPartida.get(Calendar.DAY_OF_MONTH) + "/" +
-                (dataPartida.get(Calendar.MONTH) + 1) + "/" +
-                dataPartida.get(Calendar.YEAR) + " " +
-                dataPartida.get(Calendar.HOUR_OF_DAY) + ":" +
-                dataPartida.get(Calendar.MINUTE));
-        } catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
-        }
-    }
-
-    private static void registrarChegadaParada(Scanner scanner) {
-        System.out.println("\n--- REGISTRAR CHEGADA ---");
-        
-        // Listar rotas em andamento
-        List<Rota> rotasEmAndamento = Rota.ListarAtivas().stream()
-            .filter(r -> r.getStatus_Rota() == Status_Rota.EM_ANDAMENTO)
-            .toList();
-        
-        if (rotasEmAndamento.isEmpty()) {
-            System.out.println("Nenhuma rota em andamento.");
-            return;
-        }
-        
-        System.out.println("Rotas em andamento:");
-        rotasEmAndamento.forEach(r -> {
-            System.out.println("Rota " + r.getCodRota() + ": " + 
-                r.getOrigem().getCidade().getNome() + " → " + 
-                r.getDestino().getCidade().getNome());
-            
-            System.out.println("Paradas:");
-            r.getParadas().forEach(p -> {
-                System.out.println("  " + p.getCodParada() + " - " + 
-                    p.getLocal().getCidade().getNome() + 
-                    (p.getDataHoraReal() == null ? " (pendente)" : " (concluída)"));
-            });
-        });
-        
-        System.out.print("Informe o código da parada: ");
-        int codParada = scanner.nextInt();
-        scanner.nextLine();
-        
-        System.out.println("Registrando data/hora de chegada...");
-        Calendar dataChegada = Calendar.getInstance();
-        
-        try {
-            Parada.RegistrarChegada(codParada, dataChegada);
-            System.out.println("Chegada registrada com sucesso!");
+            Rota.iniciarRota(codRota, dataPartida);
+            System.out.println("Rota iniciada com sucesso em " + formatarData(dataPartida));
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -665,9 +640,9 @@ public class Sistema_Transportadora {
     private static void finalizarRota(Scanner scanner) {
         System.out.println("\n--- FINALIZAR ROTA ---");
         
-        // Listar rotas em andamento
-        List<Rota> rotasEmAndamento = Rota.ListarAtivas().stream()
-            .filter(r -> r.getStatus_Rota() == Status_Rota.EM_ANDAMENTO)
+        // listar rotas em andamento
+        List<Rota> rotasEmAndamento = Rota.listarAtivas().stream()
+            .filter(r -> r.getStatus() == StatusRota.EM_ANDAMENTO)
             .toList();
         
         if (rotasEmAndamento.isEmpty()) {
@@ -676,7 +651,7 @@ public class Sistema_Transportadora {
         }
         
         rotasEmAndamento.forEach(r -> {
-            System.out.println(r.getCodRota() + " - " + 
+            System.out.println(r.getCodigo() + " - " + 
                 r.getOrigem().getCidade().getNome() + " → " + 
                 r.getDestino().getCidade().getNome() + 
                 " - Partida: " + formatarData(r.getDataPartida()));
@@ -690,7 +665,7 @@ public class Sistema_Transportadora {
         Calendar dataChegada = Calendar.getInstance();
         
         try {
-            Rota.FinalizarRota(codRota, dataChegada);
+            Rota.finalizarRota(codRota, dataChegada);
             System.out.println("Rota finalizada com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -706,7 +681,7 @@ public class Sistema_Transportadora {
         scanner.nextLine();
         
         try {
-            Rota.CancelarRota(codRota);
+            Rota.cancelarRota(codRota);
             System.out.println("Rota cancelada com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -722,7 +697,7 @@ public class Sistema_Transportadora {
         scanner.nextLine();
         
         try {
-            Rota rota = Rota.BuscarPorCodigo(codRota);
+            Rota rota = Rota.buscarRota(codRota);
             System.out.println("\n" + rota.toString());
             
             System.out.println("\nParadas:");
