@@ -20,7 +20,7 @@ public class Estado extends Entidade implements Nomeavel {
     }
 
     public static void registrarEstado(String nome) {
-        new Estado(0, nome).validarNome(nome);
+        new Estado(0,nome).validarNome(nome);
         
         if (Nomeavel.nomeExiste(nome, estados)) {
             throw new IllegalArgumentException("O estado " + nome + " já existe");
@@ -29,7 +29,8 @@ public class Estado extends Entidade implements Nomeavel {
     }
 
     public static Estado buscarEstado(int codigo) {
-        return buscarPorCodigo(codigo, estados);
+        validarCodigo(codigo, estados.size());
+        return estados.get(codigo - 1);
     }
 
     public static List<Estado> listarAtivos() {
@@ -39,8 +40,13 @@ public class Estado extends Entidade implements Nomeavel {
     }
 
     public static void desativarEstado(int codigo) {
-        desativarEntidade(codigo, estados, 
-            e -> "O estado " + e.getNome() + " já está desativado");
+        validarCodigo(codigo, estados.size());
+        Estado estado = estados.get(codigo - 1);
+        
+        if (!estado.isAtivo()) {
+            throw new IllegalStateException("O estado " + estado.getNome() + " já está desativado");
+        }
+        estado.desativar();
     }
 
     @Override

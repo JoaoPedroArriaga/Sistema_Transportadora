@@ -37,7 +37,8 @@ public class Cidade extends Entidade implements Nomeavel {
     }
 
     public static Cidade buscarCidade(int codigo) {
-        return buscarPorCodigo(codigo, cidades);
+        validarCodigo(codigo, cidades.size());
+        return cidades.get(codigo - 1);
     }
 
     public static List<Cidade> listarAtivas() {
@@ -47,7 +48,13 @@ public class Cidade extends Entidade implements Nomeavel {
     }
 
     public static void desativarCidade(int codigo) {
-        desativarEntidade(codigo, cidades, c -> "A cidade " + c.getNome() + " já está desativada");
+        validarCodigo(codigo, cidades.size());
+        Cidade cidade = cidades.get(codigo - 1);
+        
+        if (!cidade.isAtivo()) {
+            throw new IllegalStateException("A cidade " + cidade.getNome() + " já está desativada");
+        }
+        cidade.desativar();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.mycompany.sistema_transportadora.utils;
 import java.util.Calendar;
 
 public class DateValidator {
+    
     public static void validarDataNaoNula(Calendar data, String mensagemErro) {
         if (data == null) {
             throw new IllegalArgumentException(mensagemErro);
@@ -22,7 +23,7 @@ public class DateValidator {
     }
 
     public static void validarIntervaloDatas(Calendar inicio, Calendar fim, String mensagemErro) {
-        if (inicio.after(fim)) {
+        if (inicio == null || fim == null || inicio.after(fim)) {
             throw new IllegalArgumentException(mensagemErro);
         }
     }
