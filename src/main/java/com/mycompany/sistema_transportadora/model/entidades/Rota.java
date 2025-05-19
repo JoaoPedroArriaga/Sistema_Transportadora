@@ -1,6 +1,9 @@
 package com.mycompany.sistema_transportadora.model.entidades;
 
 import com.mycompany.sistema_transportadora.model.enums.StatusRota;
+import com.mycompany.sistema_transportadora.utils.DateUtils;
+import com.mycompany.sistema_transportadora.utils.DateValidator;
+import com.mycompany.sistema_transportadora.utils.TextFormatter;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +93,7 @@ public class Rota extends Entidade {
             throw new IllegalStateException("Só é possível iniciar rotas planejadas");
         }
         
+        DateValidator.validarDataNaoNula(dataPartida, "Data de partida não pode ser nula");
         rota.dataPartida = dataPartida;
         rota.status = StatusRota.EM_ANDAMENTO;
     }
@@ -167,11 +171,21 @@ public class Rota extends Entidade {
 
     @Override
     public String toString() {
-        return String.format("Rota [%d] - %s → %s | Status: %s | %s",
+        return String.format("Rota [%d] - %s → %s | Status: %s | Partida: %s | Chegada: %s | %s",
             getCodigo(),
-            origem.getCidade().getNome(),
-            destino.getCidade().getNome(),
+            TextFormatter.formatarEnderecoCompleto(
+                origem.getLogradouro(),
+                origem.getCidade().getNome(),
+                origem.getEstado().getNome()
+            ),
+            TextFormatter.formatarEnderecoCompleto(
+                destino.getLogradouro(),
+                destino.getCidade().getNome(),
+                destino.getEstado().getNome()
+            ),
             status,
+            DateUtils.formatDateTime(dataPartida),
+            DateUtils.formatDateTime(dataChegada),
             isAtivo() ? "Ativa" : "Inativa");
     }
 }

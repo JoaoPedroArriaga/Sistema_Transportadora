@@ -2,14 +2,26 @@ package com.mycompany.sistema_transportadora.utils;
 
 import com.mycompany.sistema_transportadora.model.entidades.Endereco;
 public class TextFormatter {
+    // Método para formatar endereço completo
+    public static String formatarEnderecoCompleto(String logradouro, String cidade, String estado) {
+        if (logradouro == null || cidade == null || estado == null) {
+            return "Endereço incompleto";
+        }
+        return String.format("%s, %s/%s", logradouro, cidade, estado);
+    }
 
+    // Versão sobrecarregada que recebe um objeto Endereco
     public static String formatarEndereco(Endereco endereco) {
         if (endereco == null) return "Endereço não especificado";
-        return String.format("%s, %s/%s", 
-               endereco.getLogradouro(),
-               endereco.getCidade().getNome(),
-               endereco.getEstado().getNome());
+        return formatarEnderecoCompleto(
+            endereco.getLogradouro(),
+            endereco.getCidade().getNome(),
+            endereco.getEstado().getNome()
+        );
     }
+
+    // ... outros métodos permanecem iguais ...
+
 
     public static String formatarNomeEEmail(String nome, String email) {
         return String.format("%s <%s>", nome, email);

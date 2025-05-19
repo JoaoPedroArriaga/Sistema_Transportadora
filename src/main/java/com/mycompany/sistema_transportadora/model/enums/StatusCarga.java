@@ -1,6 +1,6 @@
 package com.mycompany.sistema_transportadora.model.enums;
 
-public enum Status_Carga {
+public enum StatusCarga {
     ARMAZENADO,
     EM_ROTA,
     EXTRAVIADA

@@ -1,5 +1,6 @@
 package com.mycompany.sistema_transportadora.model.entidades;
 
+import com.mycompany.sistema_transportadora.utils.TextFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,31 +64,31 @@ public class Endereco extends Entidade {
     }
 
     public static Endereco buscarEndereco(int codigo) {
-        return buscarPorCodigo(codigo, enderecos);
+        validarCodigo(codigo, enderecos.size());
+        return enderecos.get(codigo - 1);
     }
 
     public static List<Endereco> listarAtivos() {
-        return enderecos.stream().filter(Endereco::isAtivo).collect(Collectors.toUnmodifiableList());
-    }
-
-    public static List<Endereco> listarPorEstado(int codEstado) {
         return enderecos.stream()
-            .filter(e -> e.getEstado().getCodigo() == codEstado && e.isAtivo())
+            .filter(Endereco::isAtivo)
             .collect(Collectors.toUnmodifiableList());
     }
 
     public static void desativarEndereco(int codigo) {
-        desativarEntidade(codigo, enderecos,
-            e -> String.format("Endereço %s já está desativado", e.getLogradouro()));
+        validarCodigo(codigo, enderecos.size());
+        Endereco endereco = enderecos.get(codigo - 1);
+        
+        if (!endereco.isAtivo()) {
+            throw new IllegalStateException("Endereço " + endereco.getLogradouro() + " já está desativado");
+        }
+        endereco.desativar();
     }
 
     @Override
     public String toString() {
-        return String.format("Endereço [%d] - %s, %s/%s - %s",
+        return String.format("Endereço [%d] - %s",
             getCodigo(),
-            logradouro,
-            cidade.getNome(),
-            estado.getNome(),
-            isAtivo() ? "Ativo" : "Inativo");
+            TextFormatter.formatarEnderecoCompleto(logradouro,cidade.getNome(),estado.getNome())
+            ) + " - " + (isAtivo() ? "Ativo" : "Inativo");
     }
 }

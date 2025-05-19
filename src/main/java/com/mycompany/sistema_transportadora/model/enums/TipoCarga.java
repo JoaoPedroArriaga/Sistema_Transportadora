@@ -1,6 +1,6 @@
 package com.mycompany.sistema_transportadora.model.enums;
 
-public enum Tipo_Carga {
+public enum TipoCarga {
     PERECIVEL,
     PERIGOSA,
     NORMAL
