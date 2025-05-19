@@ -20,11 +20,27 @@ public class TextFormatter {
         );
     }
 
-    // ... outros métodos permanecem iguais ...
-
-
     public static String formatarNomeEEmail(String nome, String email) {
         return String.format("%s <%s>", nome, email);
+    }
+
+    public static String formatarTelefone(String telefone) {
+        if (telefone == null) return "";
+        // Remove todos os caracteres não numéricos
+        String numeros = telefone.replaceAll("[^0-9]", "");
+        
+        if (numeros.length() == 11) {
+            return String.format("(%s) %s-%s", 
+                numeros.substring(0, 2),
+                numeros.substring(2, 7),
+                numeros.substring(7));
+        } else if (numeros.length() == 10) {
+            return String.format("(%s) %s-%s", 
+                numeros.substring(0, 2),
+                numeros.substring(2, 6),
+                numeros.substring(6));
+        }
+        return telefone; // Retorna original se não puder formatar
     }
 
     public static String capitalizar(String texto) {

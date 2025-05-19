@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class Carga extends Entidade {
     private static final List<Carga> cargas = new ArrayList<>();
+    
     private final TipoCarga tipo;
     private final String descricao;
     private final float peso;
@@ -26,31 +27,8 @@ public class Carga extends Entidade {
         this.peso = validarPeso(peso);
         this.volume = validarVolume(volume);
         this.quantidade = validarQuantidade(quantidade);
-        this.status = StatusCarga.ARMAZENADO;
+        this.status = StatusCarga.PENDENTE;
         this.dataCadastro = Calendar.getInstance();
-    }
-
-    // Getters
-    public TipoCarga getTipo() { 
-        return tipo; 
-    }
-    public String getDescricao() { 
-        return descricao; 
-    }
-    public float getPeso() { 
-        return peso; 
-    }
-    public float getVolume() { 
-        return volume; 
-    }
-    public int getQuantidade() { 
-        return quantidade; 
-    }
-    public StatusCarga getStatus() { 
-        return status; 
-    }
-    public Calendar getDataCadastro() { 
-        return dataCadastro; 
     }
 
     public static void adicionarCarga(TipoCarga tipo, String descricao, float peso, float volume, int quantidade) {
@@ -70,9 +48,11 @@ public class Carga extends Entidade {
 
     public static void desativarCarga(int codigo) {
         Carga carga = buscarCarga(codigo);
+        
         if (!carga.isAtivo()) {
             throw new IllegalStateException("Carga já está desativada");
         }
+        
         carga.desativar();
     }
 
@@ -80,6 +60,7 @@ public class Carga extends Entidade {
         this.status = Objects.requireNonNull(novoStatus, "Status não pode ser nulo");
     }
 
+    // Métodos de validação
     private static String validarDescricao(String descricao) {
         if (descricao == null || descricao.trim().isEmpty()) {
             throw new IllegalArgumentException("Descrição não pode ser vazia");
@@ -108,9 +89,38 @@ public class Carga extends Entidade {
         return quantidade;
     }
 
+    // Getters
+    public TipoCarga getTipo() {
+        return tipo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public float getPeso() {
+        return peso;
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public StatusCarga getStatus() {
+        return status;
+    }
+
+    public Calendar getDataCadastro() {
+        return dataCadastro;
+    }
+
     @Override
     public String toString() {
-        return String.format("Carga [%d] - %s | %s | Peso: %.2fkg | Vol: %.2fm³ | Qtd: %d | Status: %s | Cadastro: %s | %s",
+        return String.format("Carga [%d] - %s | %s | Peso: %.2f kg | Vol: %.2f m³ | Qtd: %d | Status: %s | Cadastro: %s | %s",
             getCodigo(),
             tipo,
             descricao,
