@@ -111,10 +111,14 @@ public class Rota extends Entidade {
 
     public static void cancelarRota(int codRota) {
         Rota rota = buscarRota(codRota);
-        if (rota.status == StatusRota.CANCELADA) {
-            throw new IllegalStateException("Rota já está cancelada");
+        if(rota.status != StatusRota.CONCLUIDA){
+            if (rota.status == StatusRota.CANCELADA) {
+                throw new IllegalStateException("Rota já está cancelada");
+            }
+            rota.status = StatusRota.CANCELADA;
+        }else{
+            throw new IllegalStateException("Não é possival cancelar rotas concluídas");
         }
-        rota.status = StatusRota.CANCELADA;
     }
 
     private static void validarVeiculo(int codVeiculo) {

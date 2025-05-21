@@ -1,7 +1,12 @@
 package com.mycompany.sistema_transportadora;
 
 import com.mycompany.sistema_transportadora.model.entidades.*;
+import com.mycompany.sistema_transportadora.model.enums.StatusCarga;
+import com.mycompany.sistema_transportadora.model.enums.StatusMotorista;
 import com.mycompany.sistema_transportadora.model.enums.StatusRota;
+import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
+import com.mycompany.sistema_transportadora.model.enums.TipoCarga;
+import com.mycompany.sistema_transportadora.model.enums.TipoVeiculo;
 import com.mycompany.sistema_transportadora.utils.EncodingFixer;
 
 import java.util.Calendar;
@@ -18,19 +23,22 @@ public class Sistema_Transportadora {
         cadastrarDadosIniciais();
         
         // Menu principal
-        int opcao;
+         int opcao;
         do {
             System.out.println("\n=== SISTEMA TRANSPORTADORA ===");
             System.out.println("1. Gerenciar Estados");
             System.out.println("2. Gerenciar Cidades");
             System.out.println("3. Gerenciar Endereços");
-            System.out.println("4. Gerenciar Paradas");
-            System.out.println("5. Gerenciar Rotas");
+            System.out.println("4. Gerenciar Motoristas");
+            System.out.println("5. Gerenciar Veículos");
+            System.out.println("6. Gerenciar Cargas");
+            System.out.println("7. Gerenciar Paradas"); 
+            System.out.println("8. Gerenciar Rotas");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             
             opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            scanner.nextLine();
             
             switch (opcao) {
                 case 1:
@@ -42,10 +50,19 @@ public class Sistema_Transportadora {
                 case 3:
                     menuEnderecos(scanner);
                     break;
-                case 4:
-                    menuParadas(scanner);
+                 case 4:
+                    menuMotoristas(scanner);
                     break;
                 case 5:
+                    menuVeiculos(scanner);
+                    break;
+                case 6:
+                    menuCargas(scanner);
+                    break;
+                case 7:
+                    menuParadas(scanner);
+                    break;
+                case 8:
                     menuRotas(scanner);
                     break;
                 case 0:
@@ -516,20 +533,34 @@ public class Sistema_Transportadora {
         }
     }
 
-    private static void criarNovaRota(Scanner scanner) {
+   private static void criarNovaRota(Scanner scanner) {
         System.out.println("\n--- NOVA ROTA ---");
         
-        // listar veículos disponíveis (simulação)
-        System.out.println("Veículos disponíveis:");
-        System.out.println("1 - Caminhão BA-1234");
-        System.out.println("2 - Van SP-5678");
+        // Listar veículos disponíveis
+        System.out.println("\nVeículos disponíveis:");
+        List<Veiculo> veiculosDisponiveis = Veiculo.listarPorStatus(StatusVeiculo.DISPONIVEL);
+        if (veiculosDisponiveis.isEmpty()) {
+            System.out.println("Nenhum veículo disponível no momento.");
+            return;
+        }
+        veiculosDisponiveis.forEach(v -> {
+            System.out.println(v.getCodigo() + " - " + v.getTipo() + " | Placa: " + v.getPlacaFormatada());
+        });
         System.out.print("Selecione o veículo: ");
         int codVeiculo = scanner.nextInt();
         
-        // listar cargas disponíveis (simulação)
+        // Listar cargas disponíveis
         System.out.println("\nCargas disponíveis:");
-        System.out.println("1 - Eletrônicos (500kg)");
-        System.out.println("2 - Móveis (1200kg)");
+        List<Carga> cargasDisponiveis = Carga.listarAtivas().stream()
+            .filter(c -> c.getStatus() == StatusCarga.ARMAZENADA)
+            .toList();
+        if (cargasDisponiveis.isEmpty()) {
+            System.out.println("Nenhuma carga disponível no momento.");
+            return;
+        }
+        cargasDisponiveis.forEach(c -> {
+            System.out.println(c.getCodigo() + " - " + c.getTipo() + " | " + c.getDescricao());
+        });
         System.out.print("Selecione a carga: ");
         int codCarga = scanner.nextInt();
         scanner.nextLine();
@@ -543,6 +574,14 @@ public class Sistema_Transportadora {
         try {
             Rota.adicionarRota(codVeiculo, codCarga, origem, destino);
             System.out.println("\nRota criada com sucesso!");
+            
+            // Atualizar status dos recursos
+            Veiculo veiculo = Veiculo.buscarPorCodigo(codVeiculo);
+            veiculo.atualizarStatus(StatusVeiculo.RESERVADO);
+            
+            Carga carga = Carga.buscarCarga(codCarga);
+            carga.atualizarStatus(StatusCarga.EM_TRANSPORTE);
+            
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -637,10 +676,9 @@ public class Sistema_Transportadora {
         }
     }
 
-    private static void finalizarRota(Scanner scanner) {
+   private static void finalizarRota(Scanner scanner) {
         System.out.println("\n--- FINALIZAR ROTA ---");
         
-        // listar rotas em andamento
         List<Rota> rotasEmAndamento = Rota.listarAtivas().stream()
             .filter(r -> r.getStatus() == StatusRota.EM_ANDAMENTO)
             .toList();
@@ -653,8 +691,7 @@ public class Sistema_Transportadora {
         rotasEmAndamento.forEach(r -> {
             System.out.println(r.getCodigo() + " - " + 
                 r.getOrigem().getCidade().getNome() + " → " + 
-                r.getDestino().getCidade().getNome() + 
-                " - Partida: " + formatarData(r.getDataPartida()));
+                r.getDestino().getCidade().getNome());
         });
         
         System.out.print("Selecione o código da rota: ");
@@ -665,7 +702,17 @@ public class Sistema_Transportadora {
         Calendar dataChegada = Calendar.getInstance();
         
         try {
+            Rota rota = Rota.buscarRota(codRota);
             Rota.finalizarRota(codRota, dataChegada);
+            
+            // Liberar recursos
+            Veiculo veiculo = Veiculo.buscarPorCodigo(rota.getCodVeiculo());
+            veiculo.atualizarStatus(StatusVeiculo.DISPONIVEL);
+            veiculo.atualizarQuilometragem(veiculo.getKmRodados() + 100); // Exemplo: adiciona 100km
+            
+            Carga carga = Carga.buscarCarga(rota.getCodCarga());
+            carga.atualizarStatus(StatusCarga.ENTREGUE);
+            
             System.out.println("Rota finalizada com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -681,7 +728,18 @@ public class Sistema_Transportadora {
         scanner.nextLine();
         
         try {
+            Rota rota = Rota.buscarRota(codRota);
             Rota.cancelarRota(codRota);
+            
+            // Liberar recursos
+            if (rota.getStatus() == StatusRota.PLANEJADA || rota.getStatus() == StatusRota.EM_ANDAMENTO) {
+                Veiculo veiculo = Veiculo.buscarPorCodigo(rota.getCodVeiculo());
+                veiculo.atualizarStatus(StatusVeiculo.DISPONIVEL);
+                
+                Carga carga = Carga.buscarCarga(rota.getCodCarga());
+                carga.atualizarStatus(StatusCarga.ARMAZENADA);
+            }
+            
             System.out.println("Rota cancelada com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -721,5 +779,393 @@ public class Sistema_Transportadora {
             data.get(Calendar.YEAR),
             data.get(Calendar.HOUR_OF_DAY),
             data.get(Calendar.MINUTE));
+    }
+
+    private static void menuMotoristas(Scanner scanner) {
+        int opcao;
+        do {
+            System.out.println("\n--- GERENCIAR MOTORISTAS ---");
+            System.out.println("1. Listar motoristas ativos");
+            System.out.println("2. Cadastrar novo motorista");
+            System.out.println("3. Atualizar motorista");
+            System.out.println("4. Desativar motorista");
+            System.out.println("5. Listar por status");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    System.out.println("\nMotoristas ativos:");
+                    Motorista.listarAtivos().forEach(System.out::println);
+                    break;
+                case 2:
+                    cadastrarMotorista(scanner);
+                    break;
+                case 3:
+                    atualizarMotorista(scanner);
+                    break;
+                case 4:
+                    desativarMotorista(scanner);
+                    break;
+                case 5:
+                    listarMotoristasPorStatus(scanner);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    private static void cadastrarMotorista(Scanner scanner) {
+        System.out.println("\n--- CADASTRAR MOTORISTA ---");
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+        System.out.print("CPF: ");
+        String cpf = scanner.nextLine();
+        System.out.print("CNH: ");
+        String cnh = scanner.nextLine();
+        System.out.print("Telefone: ");
+        String telefone = scanner.nextLine();
+        
+        try {
+            Motorista.cadastrar(nome, cpf, cnh, telefone);
+            System.out.println("Motorista cadastrado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void atualizarMotorista(Scanner scanner) {
+        System.out.println("\n--- ATUALIZAR MOTORISTA ---");
+        System.out.println("Motoristas ativos:");
+        Motorista.listarAtivos().forEach(System.out::println);
+        
+        System.out.print("Selecione o código do motorista: ");
+        int codigo = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Novo telefone: ");
+        String telefone = scanner.nextLine();
+        
+        System.out.println("Status disponíveis:");
+        for (StatusMotorista status : StatusMotorista.values()) {
+            System.out.println(status.ordinal() + " - " + status.getDescricao());
+        }
+        System.out.print("Novo status: ");
+        int statusOpcao = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Motorista motorista = Motorista.buscarPorCodigo(codigo);
+            motorista.atualizarTelefone(telefone);
+            motorista.atualizarStatus(StatusMotorista.values()[statusOpcao]);
+            System.out.println("Motorista atualizado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void desativarMotorista(Scanner scanner) {
+        System.out.println("\n--- DESATIVAR MOTORISTA ---");
+        System.out.println("Motoristas ativos:");
+        Motorista.listarAtivos().forEach(System.out::println);
+        
+        System.out.print("Selecione o código do motorista: ");
+        int codigo = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Motorista.desativarMotorista(codigo);
+            System.out.println("Motorista desativado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void listarMotoristasPorStatus(Scanner scanner) {
+        System.out.println("\n--- LISTAR POR STATUS ---");
+        System.out.println("Status disponíveis:");
+        for (StatusMotorista status : StatusMotorista.values()) {
+            System.out.println(status.ordinal() + " - " + status.getDescricao());
+        }
+        System.out.print("Selecione o status: ");
+        int statusOpcao = scanner.nextInt();
+        scanner.nextLine();
+        
+        List<Motorista> motoristas = Motorista.listarPorStatus(StatusMotorista.values()[statusOpcao]);
+        if (motoristas.isEmpty()) {
+            System.out.println("Nenhum motorista encontrado com este status.");
+        } else {
+            motoristas.forEach(System.out::println);
+        }
+    }
+
+    private static void menuVeiculos(Scanner scanner) {
+        int opcao;
+        do {
+            System.out.println("\n--- GERENCIAR VEÍCULOS ---");
+            System.out.println("1. Listar veículos ativos");
+            System.out.println("2. Cadastrar novo veículo");
+            System.out.println("3. Registrar manutenção");
+            System.out.println("4. Atualizar quilometragem");
+            System.out.println("5. Desativar veículo");
+            System.out.println("6. Listar por status");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    System.out.println("\nVeículos ativos:");
+                    Veiculo.listarAtivos().forEach(System.out::println);
+                    break;
+                case 2:
+                    cadastrarVeiculo(scanner);
+                    break;
+                case 3:
+                    registrarManutencao(scanner);
+                    break;
+                case 4:
+                    atualizarQuilometragem(scanner);
+                    break;
+                case 5:
+                    desativarVeiculo(scanner);
+                    break;
+                case 6:
+                    listarVeiculosPorStatus(scanner);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    private static void cadastrarVeiculo(Scanner scanner) {
+        System.out.println("\n--- CADASTRAR VEÍCULO ---");
+        System.out.println("Tipos disponíveis:");
+        for (TipoVeiculo tipo : TipoVeiculo.values()) {
+            System.out.println(tipo.ordinal() + " - " + tipo.getDescricao());
+        }
+        System.out.print("Selecione o tipo: ");
+        int tipoOpcao = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Placa: ");
+        String placa = scanner.nextLine();
+        System.out.print("Peso máximo transportável (kg): ");
+        float pesoMaximo = scanner.nextFloat();
+        System.out.print("Volume máximo transportável (m³): ");
+        float volumeMaximo = scanner.nextFloat();
+        System.out.print("Ano de fabricação: ");
+        int anoFabricacao = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Veiculo.cadastrar(
+                TipoVeiculo.values()[tipoOpcao],
+                placa,
+                pesoMaximo,
+                volumeMaximo,
+                anoFabricacao
+            );
+            System.out.println("Veículo cadastrado com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void registrarManutencao(Scanner scanner) {
+        System.out.println("\n--- REGISTRAR MANUTENÇÃO ---");
+        System.out.println("Veículos ativos:");
+        Veiculo.listarAtivos().forEach(System.out::println);
+        
+        System.out.print("Selecione o código do veículo: ");
+        int codigo = scanner.nextInt();
+        System.out.print("Quilometragem atual: ");
+        float kmAtual = scanner.nextFloat();
+        scanner.nextLine();
+        
+        try {
+            Veiculo veiculo = Veiculo.buscarPorCodigo(codigo);
+            veiculo.registrarManutencao(kmAtual);
+            System.out.println("Manutenção registrada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void atualizarQuilometragem(Scanner scanner) {
+        System.out.println("\n--- ATUALIZAR QUILOMETRAGEM ---");
+        System.out.println("Veículos ativos:");
+        Veiculo.listarAtivos().forEach(System.out::println);
+        
+        System.out.print("Selecione o código do veículo: ");
+        int codigo = scanner.nextInt();
+        System.out.print("Nova quilometragem: ");
+        float kmAtual = scanner.nextFloat();
+        scanner.nextLine();
+        
+        try {
+            Veiculo veiculo = Veiculo.buscarPorCodigo(codigo);
+            veiculo.atualizarQuilometragem(kmAtual);
+            System.out.println("Quilometragem atualizada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void desativarVeiculo(Scanner scanner) {
+        System.out.println("\n--- DESATIVAR VEÍCULO ---");
+        System.out.println("Veículos ativos:");
+        Veiculo.listarAtivos().forEach(System.out::println);
+        
+        System.out.print("Selecione o código do veículo: ");
+        int codigo = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Veiculo.desativarVeiculo(codigo);
+            System.out.println("Veículo desativado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void listarVeiculosPorStatus(Scanner scanner) {
+        System.out.println("\n--- LISTAR POR STATUS ---");
+        System.out.println("Status disponíveis:");
+        for (StatusVeiculo status : StatusVeiculo.values()) {
+            System.out.println(status.ordinal() + " - " + status.getDescricao());
+        }
+        System.out.print("Selecione o status: ");
+        int statusOpcao = scanner.nextInt();
+        scanner.nextLine();
+        
+        List<Veiculo> veiculos = Veiculo.listarPorStatus(StatusVeiculo.values()[statusOpcao]);
+        if (veiculos.isEmpty()) {
+            System.out.println("Nenhum veículo encontrado com este status.");
+        } else {
+            veiculos.forEach(System.out::println);
+        }
+    }
+
+    private static void menuCargas(Scanner scanner) {
+        int opcao;
+        do {
+            System.out.println("\n--- GERENCIAR CARGAS ---");
+            System.out.println("1. Listar cargas ativas");
+            System.out.println("2. Cadastrar nova carga");
+            System.out.println("3. Atualizar status da carga");
+            System.out.println("4. Desativar carga");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    System.out.println("\nCargas ativas:");
+                    Carga.listarAtivas().forEach(System.out::println);
+                    break;
+                case 2:
+                    cadastrarCarga(scanner);
+                    break;
+                case 3:
+                    atualizarStatusCarga(scanner);
+                    break;
+                case 4:
+                    desativarCarga(scanner);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    private static void cadastrarCarga(Scanner scanner) {
+        System.out.println("\n--- CADASTRAR CARGA ---");
+        System.out.println(TipoCarga.listarOpcoes());
+        System.out.print("Selecione o tipo de carga: ");
+        int tipoOpcao = scanner.nextInt();
+        TipoCarga tipoSelecionado = TipoCarga.values()[tipoOpcao];
+        scanner.nextLine();
+        
+        System.out.print("Descrição: ");
+        String descricao = scanner.nextLine();
+        System.out.print("Peso (kg): ");
+        float peso = scanner.nextFloat();
+        System.out.print("Volume (m³): ");
+        float volume = scanner.nextFloat();
+        System.out.print("Quantidade: ");
+        int quantidade = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Carga.adicionarCarga(
+                tipoSelecionado,
+                descricao,
+                peso,
+                volume,
+                quantidade
+            );
+            System.out.println("Carga cadastrada com sucesso!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void atualizarStatusCarga(Scanner scanner) {
+        System.out.println("\n--- ATUALIZAR STATUS ---");
+        System.out.println("Cargas ativas:");
+        Carga.listarAtivas().forEach(System.out::println);
+        
+        System.out.print("Selecione o código da carga: ");
+        int codigo = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.println("Status disponíveis:");
+        for (StatusCarga status : StatusCarga.values()) {
+            System.out.println(status.ordinal() + " - " + status);
+        }
+        System.out.print("Novo status: ");
+        int statusOpcao = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Carga carga = Carga.buscarCarga(codigo);
+            carga.atualizarStatus(StatusCarga.values()[statusOpcao]);
+            System.out.println("Status atualizado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private static void desativarCarga(Scanner scanner) {
+        System.out.println("\n--- DESATIVAR CARGA ---");
+        System.out.println("Cargas ativas:");
+        Carga.listarAtivas().forEach(System.out::println);
+        
+        System.out.print("Selecione o código da carga: ");
+        int codigo = scanner.nextInt();
+        scanner.nextLine();
+        
+        try {
+            Carga.desativarCarga(codigo);
+            System.out.println("Carga desativada com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
     }
 }

@@ -27,7 +27,7 @@ public class Carga extends Entidade {
         this.peso = validarPeso(peso);
         this.volume = validarVolume(volume);
         this.quantidade = validarQuantidade(quantidade);
-        this.status = StatusCarga.PENDENTE;
+        this.status = StatusCarga.ARMAZENADA;
         this.dataCadastro = Calendar.getInstance();
     }
 
