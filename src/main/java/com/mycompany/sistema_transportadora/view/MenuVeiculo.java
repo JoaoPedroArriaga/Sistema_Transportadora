@@ -1,7 +1,10 @@
 package com.mycompany.sistema_transportadora.view;
 
 import java.util.Scanner;
+import java.util.Calendar;
 import java.util.List;
+
+import com.mycompany.sistema_transportadora.model.entidades.Manutencao;
 import com.mycompany.sistema_transportadora.model.entidades.Veiculo;
 import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
 import com.mycompany.sistema_transportadora.model.enums.TipoVeiculo;
@@ -23,6 +26,7 @@ public class MenuVeiculo extends MenuBase {
             System.out.println("4. Atualizar quilometragem");
             System.out.println("5. Desativar veículo");
             System.out.println("6. Listar por status");
+            System.out.println("7. Gerenciar Manutenções");
             System.out.println("0. Voltar");
             
             opcao = lerOpcao();
@@ -46,6 +50,9 @@ public class MenuVeiculo extends MenuBase {
                     break;
                 case 6:
                     listarPorStatus();
+                    break;
+                case 7:
+                    gerenciarManutencoes();
                     break;
                 case 0:
                     break;
@@ -169,4 +176,61 @@ public class MenuVeiculo extends MenuBase {
         }
         aguardarEntrada();
     }
+
+    private void gerenciarManutencoes() {
+    System.out.println("\nVeículos disponíveis:");
+    Veiculo.listarAtivos().forEach(System.out::println);
+    
+    System.out.print("Selecione o código do veículo: ");
+    int codVeiculo = scanner.nextInt();
+    limparBuffer();
+    
+    List<Manutencao> manutencoes = Manutencao.listarPorVeiculo(codVeiculo);
+    if (manutencoes.isEmpty()) {
+        System.out.println("Nenhuma manutenção registrada para este veículo.");
+    } else {
+        System.out.println("\nManutenções do veículo:");
+        manutencoes.forEach(System.out::println);
+    }
+    
+    System.out.println("\n1. Registrar nova manutenção");
+    System.out.println("2. Voltar");
+    System.out.print("Escolha uma opção: ");
+    int opcao = scanner.nextInt();
+    limparBuffer();
+    
+    if (opcao == 1) {
+        registrarManutencao(codVeiculo);
+    }
+}
+
+private void registrarManutencao(int codVeiculo) {
+    System.out.println("\nInforme os dados da manutenção:");
+    System.out.print("Tipo de serviço: ");
+    String tipoServico = scanner.nextLine();
+    
+    System.out.print("Custo: R$");
+    float custo = scanner.nextFloat();
+    limparBuffer();
+    
+    System.out.println("Data da manutenção:");
+    System.out.print("Dia (1-31): ");
+    int dia = scanner.nextInt();
+    System.out.print("Mês (1-12): ");
+    int mes = scanner.nextInt() - 1;
+    System.out.print("Ano: ");
+    int ano = scanner.nextInt();
+    limparBuffer();
+    
+    Calendar data = Calendar.getInstance();
+    data.set(ano, mes, dia);
+    
+    try {
+        Manutencao.registrarManutencao(codVeiculo, data, tipoServico, custo);
+        System.out.println("Manutenção registrada com sucesso!");
+    } catch (IllegalArgumentException e) {
+        System.out.println("Erro: " + e.getMessage());
+    }
+    aguardarEntrada();
+}
 }
