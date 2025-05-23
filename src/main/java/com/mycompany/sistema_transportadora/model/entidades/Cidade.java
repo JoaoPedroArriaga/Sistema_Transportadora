@@ -1,3 +1,7 @@
+// Representa uma cidade pertencente a um estado específico.
+// A classe gerencia uma lista estática de cidades.
+
+
 package com.mycompany.sistema_transportadora.model.entidades;
 
 import com.mycompany.sistema_transportadora.model.interfaces.Nomeavel;
@@ -5,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Cidade extends Entidade implements Nomeavel {
-    private static final List<Cidade> cidades = new ArrayList<>();
-    private final String nome;
-    private final int codEstado;
+public class Cidade extends Entidade implements Nomeavel { 
+    private static final List<Cidade> cidades = new ArrayList<>(); // Lista de todas as cidades cadastradas.
+    private final String nome; // Nome da cidade.
+    private final int codEstado; // Código do estado ao qual a cidade pertence.
 
     private Cidade(int codigo, int codEstado, String nome) {
         super(codigo);
@@ -17,15 +21,15 @@ public class Cidade extends Entidade implements Nomeavel {
     }
 
     @Override
-    public String getNome() {
+    public String getNome() { // Retorna o nome da cidade.
         return nome;
     }
 
-    public int getCodEstado() {
+    public int getCodEstado() { // Retorna o código do estado ao qual a cidade pertence.
         return codEstado;
     }
 
-    public static void adicionarCidade(int codEstado, String nome) {
+    public static void adicionarCidade(int codEstado, String nome) { // Adiciona uma nova cidade ao sistema.
         new Cidade(0, codEstado, nome).validarNome(nome);
         
         if (cidades.stream().anyMatch(c -> 
@@ -36,18 +40,18 @@ public class Cidade extends Entidade implements Nomeavel {
         cidades.add(new Cidade(cidades.size() + 1, codEstado, nome));
     }
 
-    public static Cidade buscarCidade(int codigo) {
+    public static Cidade buscarCidade(int codigo) { // Busca uma cidade pelo seu código.
         validarCodigo(codigo, cidades.size());
         return cidades.get(codigo - 1);
     }
 
-    public static List<Cidade> listarAtivas() {
+    public static List<Cidade> listarAtivas() { // Lista todas as cidades ativas.
         return cidades.stream()
             .filter(Cidade::isAtivo)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static void desativarCidade(int codigo) {
+    public static void desativarCidade(int codigo) { // Desativa uma cidade pelo código.
         validarCodigo(codigo, cidades.size());
         Cidade cidade = cidades.get(codigo - 1);
         
