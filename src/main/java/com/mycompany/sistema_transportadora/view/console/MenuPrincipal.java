@@ -1,4 +1,4 @@
-package com.mycompany.sistema_transportadora.view;
+package com.mycompany.sistema_transportadora.view.console;
 
 import java.util.Scanner;
 import com.mycompany.sistema_transportadora.utils.EncodingFixer;
@@ -13,6 +13,7 @@ public class MenuPrincipal {
     private MenuCarga menuCarga;
     private MenuParada menuParada;
     private MenuRota menuRota;
+    private MenuBackup menuBackup;
 
     public MenuPrincipal() {
         EncodingFixer.fixEncoding();
@@ -29,6 +30,7 @@ public class MenuPrincipal {
         this.menuCarga = new MenuCarga(scanner);
         this.menuParada = new MenuParada(scanner);
         this.menuRota = new MenuRota(scanner);
+        this.menuBackup = new MenuBackup(scanner);
     }
 
     public void exibir() {
@@ -63,6 +65,9 @@ public class MenuPrincipal {
                 case 8:
                     menuRota.exibir();
                     break;
+                case 9:
+                    menuBackup.exibir();
+                    break;
                 case 0:
                     System.out.println("Saindo do sistema...");
                     break;
@@ -70,7 +75,7 @@ public class MenuPrincipal {
                     System.out.println("Opção inválida!");
             }
         } while (opcao != 0);
-        
+
         scanner.close();
     }
 
@@ -84,6 +89,7 @@ public class MenuPrincipal {
         System.out.println("6. Gerenciar Cargas");
         System.out.println("7. Gerenciar Paradas");
         System.out.println("8. Gerenciar Rotas");
+        System.out.println("9. Backup e Restauração");
         System.out.println("0. Sair");
     }
 

@@ -1,4 +1,4 @@
-package com.mycompany.sistema_transportadora.view;
+package com.mycompany.sistema_transportadora.view.console;
 
 import java.util.Scanner;
 import java.util.Calendar;
@@ -8,6 +8,7 @@ import com.mycompany.sistema_transportadora.model.entidades.Manutencao;
 import com.mycompany.sistema_transportadora.model.entidades.Veiculo;
 import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
 import com.mycompany.sistema_transportadora.model.enums.TipoVeiculo;
+import com.mycompany.sistema_transportadora.utils.CSVUtils;
 
 public class MenuVeiculo extends MenuBase {
     
@@ -27,6 +28,8 @@ public class MenuVeiculo extends MenuBase {
             System.out.println("5. Desativar veículo");
             System.out.println("6. Listar por status");
             System.out.println("7. Gerenciar Manutenções");
+            System.out.println("8. Exportar para CSV");
+            System.out.println("9. Importar de CSV");
             System.out.println("0. Voltar");
             
             opcao = lerOpcao();
@@ -53,6 +56,12 @@ public class MenuVeiculo extends MenuBase {
                     break;
                 case 7:
                     gerenciarManutencoes();
+                    break;
+                case 8:
+                    exportarParaCSV();
+                    break;
+                case 9:
+                    importarDeCSV();
                     break;
                 case 0:
                     break;
@@ -114,7 +123,7 @@ public class MenuVeiculo extends MenuBase {
         
         try {
             Veiculo veiculo = Veiculo.buscarPorCodigo(codigo);
-            veiculo.registrarManutencao(kmAtual);
+            veiculo.registrarManutencao(kmAtual, Calendar.getInstance());
             System.out.println("Manutenção registrada com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -178,33 +187,33 @@ public class MenuVeiculo extends MenuBase {
     }
 
     private void gerenciarManutencoes() {
-    System.out.println("\nVeículos disponíveis:");
-    Veiculo.listarAtivos().forEach(System.out::println);
-    
-    System.out.print("Selecione o código do veículo: ");
-    int codVeiculo = scanner.nextInt();
-    limparBuffer();
-    
-    List<Manutencao> manutencoes = Manutencao.listarPorVeiculo(codVeiculo);
-    if (manutencoes.isEmpty()) {
-        System.out.println("Nenhuma manutenção registrada para este veículo.");
-    } else {
-        System.out.println("\nManutenções do veículo:");
-        manutencoes.forEach(System.out::println);
+        System.out.println("\nVeículos disponíveis:");
+        Veiculo.listarAtivos().forEach(System.out::println);
+        
+        System.out.print("Selecione o código do veículo: ");
+        int codVeiculo = scanner.nextInt();
+        limparBuffer();
+        
+        List<Manutencao> manutencoes = Manutencao.listarPorVeiculo(codVeiculo);
+        if (manutencoes.isEmpty()) {
+            System.out.println("Nenhuma manutenção registrada para este veículo.");
+        } else {
+            System.out.println("\nManutenções do veículo:");
+            manutencoes.forEach(System.out::println);
+        }
+        
+        System.out.println("\n1. Registrar nova manutenção");
+        System.out.println("2. Voltar");
+        System.out.print("Escolha uma opção: ");
+        int opcao = scanner.nextInt();
+        limparBuffer();
+        
+        if (opcao == 1) {
+            registrarManutencao(codVeiculo);
+        }
     }
-    
-    System.out.println("\n1. Registrar nova manutenção");
-    System.out.println("2. Voltar");
-    System.out.print("Escolha uma opção: ");
-    int opcao = scanner.nextInt();
-    limparBuffer();
-    
-    if (opcao == 1) {
-        registrarManutencao(codVeiculo);
-    }
-}
 
-private void registrarManutencao(int codVeiculo) {
+    private void registrarManutencao(int codVeiculo) {
     System.out.println("\nInforme os dados da manutenção:");
     System.out.print("Tipo de serviço: ");
     String tipoServico = scanner.nextLine();
@@ -217,9 +226,14 @@ private void registrarManutencao(int codVeiculo) {
     System.out.print("Dia (1-31): ");
     int dia = scanner.nextInt();
     System.out.print("Mês (1-12): ");
-    int mes = scanner.nextInt() - 1;
+    int mes = scanner.nextInt() - 1; // Adjust for 0-based Calendar months
     System.out.print("Ano: ");
     int ano = scanner.nextInt();
+    limparBuffer();
+    
+    // Prompt for current km
+    System.out.print("Quilometragem atual do veículo: ");
+    float kmAtual = scanner.nextFloat();
     limparBuffer();
     
     Calendar data = Calendar.getInstance();
@@ -227,10 +241,36 @@ private void registrarManutencao(int codVeiculo) {
     
     try {
         Manutencao.registrarManutencao(codVeiculo, data, tipoServico, custo);
+        Veiculo veiculo = Veiculo.buscarPorCodigo(codVeiculo);
+        veiculo.registrarManutencao(kmAtual, data);
         System.out.println("Manutenção registrada com sucesso!");
     } catch (IllegalArgumentException e) {
         System.out.println("Erro: " + e.getMessage());
     }
     aguardarEntrada();
-}
+    }
+
+     private void exportarParaCSV() {
+        System.out.print("Informe o caminho do arquivo para exportação: ");
+        String caminho = scanner.nextLine();
+        CSVUtils.exportarVeiculos(caminho);
+        System.out.println("Veículos exportados com sucesso para: " + caminho);
+        aguardarEntrada();
+    }
+
+    private void importarDeCSV() {
+        System.out.print("Informe o caminho do arquivo para importação: ");
+        String caminho = scanner.nextLine();
+        System.out.println("ATENÇÃO: Esta operação adicionará aos dados existentes!");
+        System.out.print("Confirmar importação? (S/N): ");
+        String confirmacao = scanner.nextLine();
+        
+        if (confirmacao.equalsIgnoreCase("S")) {
+            CSVUtils.importarVeiculos(caminho);
+            System.out.println("Veículos importados com sucesso!");
+        } else {
+            System.out.println("Importação cancelada.");
+        }
+        aguardarEntrada();
+    }
 }

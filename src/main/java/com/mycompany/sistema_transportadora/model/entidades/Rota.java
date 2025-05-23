@@ -1,6 +1,8 @@
 package com.mycompany.sistema_transportadora.model.entidades;
 
+import com.mycompany.sistema_transportadora.model.enums.StatusCarga;
 import com.mycompany.sistema_transportadora.model.enums.StatusRota;
+import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
 import com.mycompany.sistema_transportadora.utils.DateUtils;
 import com.mycompany.sistema_transportadora.utils.DateValidator;
 import com.mycompany.sistema_transportadora.utils.TextFormatter;
@@ -63,6 +65,30 @@ public class Rota extends Entidade {
         return status;
     }
 
+    //Setters
+
+    public void setDataPartida(Calendar dataPartida) {
+        this.dataPartida = dataPartida;
+        if (dataPartida != null) {
+            this.status = StatusRota.EM_ANDAMENTO;
+        }
+    }
+    
+    public void setDataChegada(Calendar dataChegada) {
+        this.dataChegada = dataChegada;
+        if (dataChegada != null) {
+            this.status = StatusRota.CONCLUIDA;
+            
+            // Atualizar veículo e carga quando a rota é concluída
+            Veiculo veiculo = Veiculo.buscarPorCodigo(this.codVeiculo);
+            veiculo.atualizarStatus(StatusVeiculo.DISPONIVEL);
+            veiculo.atualizarQuilometragem(veiculo.getKmRodados());
+            
+            Carga carga = Carga.buscarCarga(this.codCarga);
+            carga.atualizarStatus(StatusCarga.ENTREGUE);
+        }
+    }
+
     @Override
     public boolean isAtivo() {
         return status != StatusRota.CANCELADA;
@@ -118,6 +144,19 @@ public class Rota extends Entidade {
             rota.status = StatusRota.CANCELADA;
         }else{
             throw new IllegalStateException("Não é possival cancelar rotas concluídas");
+        }
+    }
+
+    public void atualizarStatus(StatusRota novoStatus) {
+        this.status = novoStatus;
+
+        if (novoStatus == StatusRota.CANCELADA && this.status != StatusRota.CONCLUIDA) {
+            // Liberar recursos se a rota for cancelada
+            Veiculo veiculo = Veiculo.buscarPorCodigo(this.codVeiculo);
+            veiculo.atualizarStatus(StatusVeiculo.DISPONIVEL);
+            
+            Carga carga = Carga.buscarCarga(this.codCarga);
+            carga.atualizarStatus(StatusCarga.ARMAZENADA);
         }
     }
 

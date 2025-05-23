@@ -1,4 +1,4 @@
-package com.mycompany.sistema_transportadora.view;
+package com.mycompany.sistema_transportadora.view.console;
 
 import java.util.Scanner;
 

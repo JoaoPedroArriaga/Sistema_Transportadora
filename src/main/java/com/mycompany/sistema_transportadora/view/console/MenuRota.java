@@ -1,4 +1,4 @@
-package com.mycompany.sistema_transportadora.view;
+package com.mycompany.sistema_transportadora.view.console;
 
 import java.util.Scanner;
 import java.util.Calendar;
@@ -7,6 +7,7 @@ import com.mycompany.sistema_transportadora.model.entidades.*;
 import com.mycompany.sistema_transportadora.model.enums.StatusCarga;
 import com.mycompany.sistema_transportadora.model.enums.StatusRota;
 import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
+import com.mycompany.sistema_transportadora.utils.CSVUtils;
 
 public class MenuRota extends MenuBase {
     
@@ -27,6 +28,8 @@ public class MenuRota extends MenuBase {
             System.out.println("6. Finalizar rota");
             System.out.println("7. Cancelar rota");
             System.out.println("8. Visualizar detalhes da rota");
+            System.out.println("9. Exportar para CSV");
+            System.out.println("10. Importar de CSV");
             System.out.println("0. Voltar");
             
             opcao = lerOpcao();
@@ -56,6 +59,12 @@ public class MenuRota extends MenuBase {
                     break;
                 case 8:
                     visualizarDetalhesRota();
+                    break;
+                case 9:
+                    exportarParaCSV();
+                    break;
+                case 10:
+                    importarDeCSV();
                     break;
                 case 0:
                     break;
@@ -360,5 +369,29 @@ public class MenuRota extends MenuBase {
             data.get(Calendar.YEAR),
             data.get(Calendar.HOUR_OF_DAY),
             data.get(Calendar.MINUTE));
+    }
+
+     private void exportarParaCSV() {
+        System.out.print("Informe o caminho do arquivo para exportação: ");
+        String caminho = scanner.nextLine();
+        CSVUtils.exportarVeiculos(caminho);
+        System.out.println("Veículos exportados com sucesso para: " + caminho);
+        aguardarEntrada();
+    }
+
+    private void importarDeCSV() {
+        System.out.print("Informe o caminho do arquivo para importação: ");
+        String caminho = scanner.nextLine();
+        System.out.println("ATENÇÃO: Esta operação adicionará aos dados existentes!");
+        System.out.print("Confirmar importação? (S/N): ");
+        String confirmacao = scanner.nextLine();
+        
+        if (confirmacao.equalsIgnoreCase("S")) {
+            CSVUtils.importarVeiculos(caminho);
+            System.out.println("Veículos importados com sucesso!");
+        } else {
+            System.out.println("Importação cancelada.");
+        }
+        aguardarEntrada();
     }
 }
