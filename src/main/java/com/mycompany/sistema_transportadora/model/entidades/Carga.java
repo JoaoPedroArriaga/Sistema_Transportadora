@@ -10,17 +10,17 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Carga extends Entidade {
-    private static final List<Carga> cargas = new ArrayList<>();
+    private static final List<Carga> cargas = new ArrayList<>(); //Lista de todas as cargas cadastradas no sistema. 
     
-    private final TipoCarga tipo;
-    private final String descricao;
-    private final float peso;
-    private final float volume;
-    private final int quantidade;
-    private StatusCarga status;
-    private final Calendar dataCadastro;
+    private final TipoCarga tipo;  //Tipo da carga (frágil, perecível, etc.) 
+    private final String descricao; //Descrição da carga. 
+    private final float peso;  //Peso da carga em quilogramas. 
+    private final float volume;  //Volume da carga em metros cúbicos. 
+    private final int quantidade; //Quantidade de itens da carga. 
+    private StatusCarga status; //Status atual da carga. 
+    private final Calendar dataCadastro; // Data de cadastro da carga. 
 
-    private Carga(int codigo, TipoCarga tipo, String descricao, float peso, float volume, int quantidade) {
+    private Carga(int codigo, TipoCarga tipo, String descricao, float peso, float volume, int quantidade) {  //Construtor privado que instancia uma nova carga.
         super(codigo);
         this.tipo = Objects.requireNonNull(tipo, "Tipo de carga não pode ser nulo");
         this.descricao = validarDescricao(descricao);
@@ -31,22 +31,22 @@ public class Carga extends Entidade {
         this.dataCadastro = Calendar.getInstance();
     }
 
-    public static void adicionarCarga(TipoCarga tipo, String descricao, float peso, float volume, int quantidade) {
+    public static void adicionarCarga(TipoCarga tipo, String descricao, float peso, float volume, int quantidade) { //adiciona uma nova carga ao sistema.
         cargas.add(new Carga(cargas.size() + 1, tipo, descricao, peso, volume, quantidade));
     }
 
-    public static Carga buscarCarga(int codigo) {
+    public static Carga buscarCarga(int codigo) { //busca uma carga pelo código.
         validarCodigo(codigo, cargas.size());
         return cargas.get(codigo - 1);
     }
 
-    public static List<Carga> listarAtivas() {
+    public static List<Carga> listarAtivas() { //Lista todas as cargas ativas.
         return cargas.stream()
             .filter(Carga::isAtivo)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static void desativarCarga(int codigo) {
+    public static void desativarCarga(int codigo) { //Desativa uma carga pelo código.
         Carga carga = buscarCarga(codigo);
         
         if (!carga.isAtivo()) {
@@ -56,12 +56,12 @@ public class Carga extends Entidade {
         carga.desativar();
     }
 
-    public void atualizarStatus(StatusCarga novoStatus) {
+    public void atualizarStatus(StatusCarga novoStatus) { //Atualiza o status da carga.
         this.status = Objects.requireNonNull(novoStatus, "Status não pode ser nulo");
     }
 
-    // Métodos de validação
-    private static String validarDescricao(String descricao) {
+    
+    private static String validarDescricao(String descricao) {   // Métodos de validação
         if (descricao == null || descricao.trim().isEmpty()) {
             throw new IllegalArgumentException("Descrição não pode ser vazia");
         }
