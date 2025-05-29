@@ -1,3 +1,6 @@
+//  Representa um veículo da transportadora, com atributos como tipo, placa, capacidade de carga,
+// status atual, quilometragem rodada e última manutenção.
+
 package com.mycompany.sistema_transportadora.model.entidades;
 
 import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
@@ -8,16 +11,19 @@ import java.util.List;
 
 public class Veiculo extends Entidade {
     
-    private static final List<Veiculo> veiculos = new ArrayList<>();
+    private static final List<Veiculo> veiculos = new ArrayList<>(); // Lista estática que armazena todos os veículos cadastrados
     
-    private final TipoVeiculo tipo;
-    private final String placa;
-    private final double capacidadeCarga;
-    private StatusVeiculo status;
-    private double kmRodados;
-    private Calendar ultimaManutencao;
+    private final TipoVeiculo tipo; // Tipo do veículo (ex: Caminhão, Van).
+    private final String placa; // Placa do veículo, validada no padrão AAA-9A99.
+    private final double capacidadeCarga; // Capacidade máxima de carga (em kg).
+    private StatusVeiculo status; // Status atual do veículo (ex: DISPONIVEL, EM_MANUTENCAO).
+    private double kmRodados; // Quilometragem total rodada pelo veículo.
+    private Calendar ultimaManutencao; // Data da última manutenção realizada.
 
-    private Veiculo(int codigo, TipoVeiculo tipo, String placa, double capacidadeCarga) {
+    // Construtor privado utilizado para instanciar um novo veículo com código gerado automaticamente.
+    // A placa e a capacidade são validadas no momento da criação.
+    
+    private Veiculo(int codigo, TipoVeiculo tipo, String placa, double capacidadeCarga) { 
         super(codigo);
         this.tipo = tipo;
         this.placa = validarPlaca(placa);
@@ -27,11 +33,11 @@ public class Veiculo extends Entidade {
         this.ultimaManutencao = null;
     }
 
-    public static void cadastrar(TipoVeiculo tipo, String placa, double capacidadeCarga) {
+    public static void cadastrar(TipoVeiculo tipo, String placa, double capacidadeCarga) { // Cadastra um novo veículo e o adiciona à lista estática.
         veiculos.add(new Veiculo(veiculos.size() + 1, tipo, placa, capacidadeCarga));
     }
 
-    public static Veiculo buscarPorCodigo(int codigo) {
+    public static Veiculo buscarPorCodigo(int codigo) { // Busca um veículo pelo código.
         if (codigo < 1 || codigo > veiculos.size()) {
             throw new IllegalArgumentException("Código de veículo inválido");
         }
