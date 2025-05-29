@@ -1,3 +1,8 @@
+// Representa uma rota de transporte dentro do sistema da transportadora.
+// Uma rota possui veículo, carga, origem, destino, paradas intermediárias, datas de partida e chegada, e um status que indica seu estado atual.
+// Esta classe mantém uma lista estática com todas as rotas criadas.
+// Oferecendo operações para gerenciar as rotas, como adicionar paradas, iniciar, finalizar e cancelar rotas.
+
 package com.mycompany.sistema_transportadora.model.entidades;
 
 import com.mycompany.sistema_transportadora.model.enums.StatusCarga;
@@ -13,17 +18,17 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Rota extends Entidade {
-    private static final List<Rota> rotas = new ArrayList<>();
-    private final int codVeiculo;
-    private final int codCarga;
-    private final Endereco origem;
-    private final Endereco destino;
-    private final List<Parada> paradas;
-    private Calendar dataPartida;
-    private Calendar dataChegada;
-    private StatusRota status;
+    private static final List<Rota> rotas = new ArrayList<>(); // Lista estática contendo todas as rotas criadas.
+    private final int codVeiculo; // Código do veículo associado à rota.
+    private final int codCarga; // Código da carga associada à rota.
+    private final Endereco origem; // Endereço de origem da rota.
+    private final Endereco destino; // Endereço de destino da rota.
+    private final List<Parada> paradas; // Lista de paradas intermediárias da rota.
+    private Calendar dataPartida; // Data e hora da partida da rota.
+    private Calendar dataChegada; // Data e hora da chegada da rota.
+    private StatusRota status; // Status atual da rota.
 
-    private Rota(int codigo, int codVeiculo, int codCarga, Endereco origem, Endereco destino) {
+    private Rota(int codigo, int codVeiculo, int codCarga, Endereco origem, Endereco destino) { // Construtor privado para criar uma rota.
         super(codigo);
         this.codVeiculo = codVeiculo;
         this.codCarga = codCarga;
@@ -33,48 +38,48 @@ public class Rota extends Entidade {
         this.status = StatusRota.PLANEJADA;
     }
 
-    public int getCodVeiculo() {
+    public int getCodVeiculo() { // Retorna o código do veículo associado à rota.
         return codVeiculo;
     }
 
-    public int getCodCarga() {
+    public int getCodCarga() { // Retorna o código da carga associada à rota.
         return codCarga;
     }
 
-    public Endereco getOrigem() {
+    public Endereco getOrigem() { // Retorna o endereço de origem da rota.
         return origem;
     }
 
-    public Endereco getDestino() {
+    public Endereco getDestino() { // Retorna o endereço de destino da rota.
         return destino;
     }
 
-    public List<Parada> getParadas() {
+    public List<Parada> getParadas() { // Retorna uma lista imutável com as paradas da rota.
         return Collections.unmodifiableList(paradas);
     }
 
-    public Calendar getDataPartida() {
+    public Calendar getDataPartida() { // Retorna a data e hora da partida da rota.
         return dataPartida;
     }
 
-    public Calendar getDataChegada() {
+    public Calendar getDataChegada() { // Retorna a data e hora da chegada da rota.
         return dataChegada;
     }
 
-    public StatusRota getStatus() {
+    public StatusRota getStatus() { // Retorna o status atual da rota.
         return status;
     }
 
     //Setters
 
-    public void setDataPartida(Calendar dataPartida) {
-        this.dataPartida = dataPartida;
+    public void setDataPartida(Calendar dataPartida) { // Define a data/hora da partida da rota, atualiza o status para EM_ANDAMENTO caso a data seja não nula.
+        this.dataPartida = dataPartida;                
         if (dataPartida != null) {
             this.status = StatusRota.EM_ANDAMENTO;
         }
     }
     
-    public void setDataChegada(Calendar dataChegada) {
+    public void setDataChegada(Calendar dataChegada) { // Define a data/hora da chegada da rota, atualiza o status para CONCLUIDA e atualiza status do veículo e carga.
         this.dataChegada = dataChegada;
         if (dataChegada != null) {
             this.status = StatusRota.CONCLUIDA;
@@ -90,11 +95,11 @@ public class Rota extends Entidade {
     }
 
     @Override
-    public boolean isAtivo() {
+    public boolean isAtivo() { // Indica se a rota está ativa, ou seja, não está cancelada.
         return status != StatusRota.CANCELADA;
     }
 
-    public static void adicionarRota(int codVeiculo, int codCarga, Endereco origem, Endereco destino) {
+    public static void adicionarRota(int codVeiculo, int codCarga, Endereco origem, Endereco destino) { // Adiciona uma nova rota ao sistema com os dados fornecidos.
         validarVeiculo(codVeiculo);
         validarCarga(codCarga);
         validarEnderecos(origem, destino);
@@ -102,7 +107,7 @@ public class Rota extends Entidade {
         rotas.add(new Rota(rotas.size() + 1, codVeiculo, codCarga, origem, destino));
     }
 
-    public static void adicionarParada(int codRota, Parada parada) {
+    public static void adicionarParada(int codRota, Parada parada) { // Adiciona uma parada a uma rota planejada.
         Rota rota = buscarRota(codRota);
         
         if (!rota.podeAdicionarParadas()) {
@@ -112,7 +117,7 @@ public class Rota extends Entidade {
         rota.paradas.add(parada);
     }
 
-    public static void iniciarRota(int codRota, Calendar dataPartida) {
+    public static void iniciarRota(int codRota, Calendar dataPartida) { // Inicia uma rota marcada como planejada, define a data de partida e atualiza status para EM_ANDAMENTO.
         Rota rota = buscarRota(codRota);
         
         if (rota.status != StatusRota.PLANEJADA) {
@@ -124,7 +129,7 @@ public class Rota extends Entidade {
         rota.status = StatusRota.EM_ANDAMENTO;
     }
 
-    public static void finalizarRota(int codRota, Calendar dataChegada) {
+    public static void finalizarRota(int codRota, Calendar dataChegada) { // Finaliza uma rota em andamento.
         Rota rota = buscarRota(codRota);
         
         if (rota.status != StatusRota.EM_ANDAMENTO) {
@@ -135,7 +140,7 @@ public class Rota extends Entidade {
         rota.status = StatusRota.CONCLUIDA;
     }
 
-    public static void cancelarRota(int codRota) {
+    public static void cancelarRota(int codRota) { // Cancela uma rota se não estiver concluída.
         Rota rota = buscarRota(codRota);
         if(rota.status != StatusRota.CONCLUIDA){
             if (rota.status == StatusRota.CANCELADA) {
@@ -147,7 +152,7 @@ public class Rota extends Entidade {
         }
     }
 
-    public void atualizarStatus(StatusRota novoStatus) {
+    public void atualizarStatus(StatusRota novoStatus) { // Atualiza o status da rota e libera recursos se cancelada.
         this.status = novoStatus;
 
         if (novoStatus == StatusRota.CANCELADA && this.status != StatusRota.CONCLUIDA) {
@@ -160,19 +165,24 @@ public class Rota extends Entidade {
         }
     }
 
-    private static void validarVeiculo(int codVeiculo) {
+    private static void validarVeiculo(int codVeiculo) { // Valida se o código do veículo é válido (maior ou igual a 1).
         if (codVeiculo < 1) {
             throw new IllegalArgumentException("Código de veículo inválido");
         }
     }
 
-    private static void validarCarga(int codCarga) {
+    private static void validarCarga(int codCarga) { // Valida se o código da carga é válido (maior ou igual a 1)
         if (codCarga < 1) {
             throw new IllegalArgumentException("Código de carga inválido");
         }
     }
 
-    private static void validarEnderecos(Endereco origem, Endereco destino) {
+    // Valida os endereços de origem e destino.
+    // Não podem ser nulos.
+    // Devem estar ativos.
+    // não podem ser iguais.
+    
+    private static void validarEnderecos(Endereco origem, Endereco destino) { 
         if (origem == null || destino == null) {
             throw new IllegalArgumentException("Endereços não podem ser nulos");
         }
@@ -184,27 +194,27 @@ public class Rota extends Entidade {
         }
     }
 
-    public static Rota buscarRota(int codigo) {
+    public static Rota buscarRota(int codigo) { // Busca uma rota pelo código informado
         return buscarPorCodigo(codigo, rotas);
     }
 
-    public static List<Rota> listarAtivas() {
+    public static List<Rota> listarAtivas() { // Retorna uma lista imutável com todas as rotas que estão ativas (não canceladas).
         return rotas.stream()
             .filter(Rota::isAtivo)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static List<Rota> listarPorStatus(StatusRota status) {
+    public static List<Rota> listarPorStatus(StatusRota status) { // Retorna uma lista imutável com as rotas que possuem o status especificado.
         return rotas.stream()
             .filter(r -> r.getStatus() == status)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public boolean podeAdicionarParadas() {
+    public boolean podeAdicionarParadas() { // Verifica se é possível adicionar paradas na rota (apenas se estiver planejada).
         return status == StatusRota.PLANEJADA;
     }
 
-    public String resumo() {
+    public String resumo() { // Retorna um resumo textual da rota com código, cidades de origem/destino e status.
         return String.format("[%d] %s → %s - %s",
             getCodigo(),
             origem.getCidade().getNome(),
@@ -212,6 +222,8 @@ public class Rota extends Entidade {
             status);
     }
 
+   // Retorna uma representação completa da rota, com origem, destino, status,
+   // datas formatadas e se está ativa ou inativa. 
     @Override
     public String toString() {
         return String.format("Rota [%d] - %s → %s | Status: %s | Partida: %s | Chegada: %s | %s",
