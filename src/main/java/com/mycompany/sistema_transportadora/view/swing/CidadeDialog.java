@@ -2,10 +2,13 @@ package com.mycompany.sistema_transportadora.view.swing;
 
 import com.mycompany.sistema_transportadora.model.entidades.Cidade;
 import com.mycompany.sistema_transportadora.model.entidades.Estado;
+import com.mycompany.sistema_transportadora.utils.EventManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import javax.swing.border.EmptyBorder;
 
 public class CidadeDialog extends JDialog {
@@ -95,6 +98,9 @@ public class CidadeDialog extends JDialog {
             }
             
             Cidade.adicionarCidade(estado.getCodigo(), nome);
+
+            EventManager.notifyCidadeChanged();
+
             dispose();
             
         } catch (IllegalArgumentException ex) {

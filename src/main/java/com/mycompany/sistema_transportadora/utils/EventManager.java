@@ -7,7 +7,6 @@ import java.util.Set;
 public class EventManager {
     private static final Set<Runnable> estadoListeners = new HashSet<>();
     private static final Set<Runnable> cidadeListeners = new HashSet<>();
-    private static final Set<Runnable> veiculoListeners = new HashSet<>();
 
     // Métodos para Estado
     public static void addEstadoListener(Runnable listener) {
@@ -35,21 +34,6 @@ public class EventManager {
 
     public static void notifyCidadeChanged() {
         for (Runnable listener : cidadeListeners) {
-            listener.run();
-        }
-    }
-
-    // Métodos para Veículo
-    public static void addVeiculoListener(Runnable listener) {
-        veiculoListeners.add(listener);
-    }
-
-    public static void removeVeiculoListener(Runnable listener) {
-        veiculoListeners.remove(listener);
-    }
-
-    public static void notifyVeiculoChanged() {
-        for (Runnable listener : veiculoListeners) {
             listener.run();
         }
     }

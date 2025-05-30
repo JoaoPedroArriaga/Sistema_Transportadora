@@ -6,6 +6,7 @@ import com.mycompany.sistema_transportadora.utils.EventManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
@@ -22,15 +23,12 @@ public class CidadePanel extends JPanel {
         setLayout(new BorderLayout());
         initComponents();
         carregarEstados();
-        loadData();
         registrarListeners();
     }
 
     private void registrarListeners() {
-        // Registrar para receber notificações de mudança
         EventManager.addEstadoListener(this::carregarEstados);
         
-        // Remover listener quando o painel for fechado
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentHidden(ComponentEvent e) {
@@ -40,6 +38,13 @@ public class CidadePanel extends JPanel {
     }
     
     private void carregarEstados() {
+        // Guarda os listeners atuais do combo
+        ActionListener[] listeners = estadoCombo.getActionListeners();
+        // Remove temporariamente os listeners para evitar disparos durante a atualização
+        for (ActionListener listener : listeners) {
+            estadoCombo.removeActionListener(listener);
+        }
+        
         Estado estadoSelecionado = (Estado) estadoCombo.getSelectedItem();
         estadoCombo.removeAllItems();
         
@@ -48,7 +53,6 @@ public class CidadePanel extends JPanel {
             estadoCombo.addItem(estado);
         }
         
-        // Restaurar seleção anterior se possível
         if (estadoSelecionado != null) {
             for (int i = 0; i < estadoCombo.getItemCount(); i++) {
                 Estado item = estadoCombo.getItemAt(i);
@@ -57,18 +61,26 @@ public class CidadePanel extends JPanel {
                     break;
                 }
             }
+        } else if (estados.size() > 0) {
+            estadoCombo.setSelectedIndex(0);
         }
         
-        // Recarregar dados da tabela
+        // Restaura os listeners
+        for (ActionListener listener : listeners) {
+            estadoCombo.addActionListener(listener);
+        }
+        
+        // Recarrega as cidades para o estado selecionado
         loadData();
     }
 
     private void initComponents() {
-        // Toolbar
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         
         estadoCombo = new JComboBox<>();
+        // Adiciona listener para recarregar a tabela quando o estado mudar
+        estadoCombo.addActionListener(e -> loadData());
         
         JButton addBtn = createToolbarButton("Adicionar", "add.png");
         addBtn.addActionListener(e -> adicionarCidade());
@@ -84,7 +96,6 @@ public class CidadePanel extends JPanel {
 
         add(toolBar, BorderLayout.NORTH);
 
-        // Tabela
         tableModel = new DefaultTableModel(
             new Object[]{"Código", "Nome", "Estado", "Ativa"}, 0
         ) {
@@ -102,7 +113,6 @@ public class CidadePanel extends JPanel {
         scrollPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         add(scrollPane, BorderLayout.CENTER);
         
-        // Status bar
         statusLabel = new JLabel(" Total de cidades: 0 ");
         statusLabel.setBorder(new EmptyBorder(5, 10, 5, 10));
         add(statusLabel, BorderLayout.SOUTH);
@@ -126,9 +136,10 @@ public class CidadePanel extends JPanel {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                tableModel.setRowCount(0);
+                tableModel.setRowCount(0); // Limpa a tabela
                 Estado estadoSelecionado = (Estado) estadoCombo.getSelectedItem();
                 if (estadoSelecionado != null) {
+                    // Filtra as cidades pelo estado selecionado
                     List<Cidade> cidades = Cidade.listarAtivas();
                     for (Cidade cidade : cidades) {
                         if (cidade.getCodEstado() == estadoSelecionado.getCodigo()) {
@@ -175,7 +186,7 @@ public class CidadePanel extends JPanel {
         
         CidadeDialog dialog = new CidadeDialog((JFrame) SwingUtilities.getWindowAncestor(this), estadoSelecionado);
         dialog.setVisible(true);
-        loadData();
+        loadData(); // Recarrega os dados após fechar o diálogo
     }
 
     private void removerCidade() {
@@ -192,7 +203,7 @@ public class CidadePanel extends JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     Cidade.desativarCidade(codigo);
-                    loadData();
+                    loadData(); // Recarrega os dados após desativar
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(
                         this,
