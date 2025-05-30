@@ -89,9 +89,9 @@ public class MenuVeiculo extends MenuBase {
         System.out.print("Placa: ");
         String placa = scanner.nextLine();
         System.out.print("Peso máximo transportável (kg): ");
-        float pesoMaximo = scanner.nextFloat();
+        double pesoMaximo = scanner.nextFloat();
         System.out.print("Volume máximo transportável (m³): ");
-        float volumeMaximo = scanner.nextFloat();
+        double volumeMaximo = scanner.nextFloat();
         System.out.print("Ano de fabricação: ");
         int anoFabricacao = scanner.nextInt();
         limparBuffer();

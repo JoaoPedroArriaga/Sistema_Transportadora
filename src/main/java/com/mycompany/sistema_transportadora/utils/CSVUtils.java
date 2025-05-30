@@ -196,8 +196,8 @@ public class CSVUtils {
                 v.getTipo().name(),
                 v.getPlaca(),
                 String.valueOf(v.getCapacidadeCarga()),
-                String.valueOf(v.getVolumeMaximoTransportavel()),
                 String.valueOf(v.getAnoFabricacao()),
+                String.valueOf(v.getVolumeMaximoTransportavel()),
                 String.valueOf(v.getKmRodados()),
                 v.getStatus().name(),
                 v.getDataUltimaManutencao() != null ? 
