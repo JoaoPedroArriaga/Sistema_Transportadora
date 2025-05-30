@@ -1,3 +1,6 @@
+//  Representa um veículo da transportadora, com atributos como tipo, placa, capacidade de carga,
+// status atual, quilometragem rodada e última manutenção.
+
 package com.mycompany.sistema_transportadora.model.entidades;
 
 import com.mycompany.sistema_transportadora.model.enums.StatusVeiculo;
@@ -8,7 +11,7 @@ import java.util.List;
 
 public class Veiculo extends Entidade {
     
-    private static final List<Veiculo> veiculos = new ArrayList<>();
+    private static final List<Veiculo> veiculos = new ArrayList<>(); // Lista estática que armazena todos os veículos cadastrados
     
     private final TipoVeiculo tipo;
     private final String placa;
@@ -16,12 +19,8 @@ public class Veiculo extends Entidade {
     private StatusVeiculo status;
     private double kmRodados;
     private Calendar ultimaManutencao;
-    private final double volumeMaximo;
-    private final int anoFabricacao;
-    private float volumeMaximoTransportavel;
-    private Calendar dataUltimaManutencao;
 
-    private Veiculo(int codigo, TipoVeiculo tipo, String placa, double capacidadeCarga, double volumeMaximo, int anoFabricacao) {
+    private Veiculo(int codigo, TipoVeiculo tipo, String placa, double capacidadeCarga) {
         super(codigo);
         this.tipo = tipo;
         this.placa = validarPlaca(placa);
@@ -33,11 +32,11 @@ public class Veiculo extends Entidade {
         this.ultimaManutencao = null;
     }
 
-    public static void cadastrar(TipoVeiculo tipo, String placa, double capacidadeCarga, double volumeMaximo, int anoFabricacao) {
-        veiculos.add(new Veiculo(veiculos.size() + 1, tipo, placa, capacidadeCarga, volumeMaximo, anoFabricacao));
+    public static void cadastrar(TipoVeiculo tipo, String placa, double capacidadeCarga) {
+        veiculos.add(new Veiculo(veiculos.size() + 1, tipo, placa, capacidadeCarga));
     }
 
-    public static Veiculo buscarPorCodigo(int codigo) {
+    public static Veiculo buscarPorCodigo(int codigo) { // Busca um veículo pelo código.
         if (codigo < 1 || codigo > veiculos.size()) {
             throw new IllegalArgumentException("Código de veículo inválido");
         }

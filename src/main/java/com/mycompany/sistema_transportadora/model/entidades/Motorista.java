@@ -1,3 +1,9 @@
+// Representa um motorista no sistema da transportadora.
+// Cada motorista possui informações pessoais (nome, CPF, CNH, telefone).
+// Um status que indica sua disponibilidade, além de um código único.
+// Motoristas podem ser cadastrados, buscados, listados por status e desativados.
+// A classe mantém uma lista estática com todos os motoristas cadastrados.
+
 package com.mycompany.sistema_transportadora.model.entidades;
 
 import com.mycompany.sistema_transportadora.model.enums.StatusMotorista;
@@ -8,15 +14,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Motorista extends Entidade {
-    private static final List<Motorista> motoristas = new ArrayList<>();
+    private static final List<Motorista> motoristas = new ArrayList<>(); // Lista estática que mantém todos os motoristas cadastrados.
     
-    private final String nome;
-    private final String cpf;
-    private final String cnh;
-    private String telefone;
-    private StatusMotorista status;
+    private final String nome; // Nome completo do motorista.
+    private final String cpf; // CPF do motorista.
+    private final String cnh; // CNH.
+    private String telefone; // Telefone de contato do motorista.
+    private StatusMotorista status; // Status atual do motorista (disponível, desligado, etc).
 
-    private Motorista(int codigo, String nome, String cpf, String cnh, String telefone) {
+    private Motorista(int codigo, String nome, String cpf, String cnh, String telefone) { // Construtor privado que aplica validações e inicializa uma nova instância de Motorista.
         super(codigo);
         this.nome = validarNome(nome);
         this.cpf = validarCPF(cpf);
@@ -25,29 +31,29 @@ public class Motorista extends Entidade {
         this.status = StatusMotorista.DISPONIVEL;
     }
 
-    public static void cadastrar(String nome, String cpf, String cnh, String telefone) {
+    public static void cadastrar(String nome, String cpf, String cnh, String telefone) { // Cadastra um novo motorista no sistema..
         validarCNHUnica(cnh);
         motoristas.add(new Motorista(motoristas.size() + 1, nome, cpf, cnh, telefone));
     }
 
-    public static Motorista buscarPorCodigo(int codigo) {
+    public static Motorista buscarPorCodigo(int codigo) { // Busca um motorista pelo seu código.
         validarCodigo(codigo, motoristas.size());
         return motoristas.get(codigo - 1);
     }
 
-    public static List<Motorista> listarAtivos() {
+    public static List<Motorista> listarAtivos() { // Lista todos os motoristas ativos.
         return motoristas.stream()
             .filter(Motorista::isAtivo)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static List<Motorista> listarPorStatus(StatusMotorista status) {
+    public static List<Motorista> listarPorStatus(StatusMotorista status) { // Lista motoristas filtrados por um status específico.
         return motoristas.stream()
             .filter(m -> m.getStatus() == status)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public static void desativarMotorista(int codigo) {
+    public static void desativarMotorista(int codigo) { // Desativa um motorista, alterando seu status para desligado.
         Motorista motorista = buscarPorCodigo(codigo);
         
         if (!motorista.isAtivo()) {
@@ -58,11 +64,11 @@ public class Motorista extends Entidade {
         motorista.status = StatusMotorista.DESLIGADO;
     }
 
-    public void atualizarStatus(StatusMotorista novoStatus) {
+    public void atualizarStatus(StatusMotorista novoStatus) { // Atualiza o status do motorista.
         this.status = Objects.requireNonNull(novoStatus);
     }
 
-    public void atualizarTelefone(String novoTelefone) {
+    public void atualizarTelefone(String novoTelefone) { // Atualiza o telefone do motorista.
         this.telefone = validarTelefone(novoTelefone);
     }
 
@@ -136,7 +142,7 @@ public class Motorista extends Entidade {
 
     @Override
     public String toString() {
-        return String.format("Motorista [%d] - %s | CPF: %s | CNH: %s | Tel: %s | Status: %s | %s",
+        return String.format("Motorista [%d] - %s | CPF: %s | CNH: %s | Tel: %s | Status: %s | %s", // Representação textual do motorista, com seus dados formatados e status.
             getCodigo(),
             getNomeFormatado(),
             getCpfFormatado(),
