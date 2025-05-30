@@ -16,19 +16,25 @@ public class Veiculo extends Entidade {
     private StatusVeiculo status;
     private double kmRodados;
     private Calendar ultimaManutencao;
+    private final double volumeMaximo;
+    private final int anoFabricacao;
+    private float volumeMaximoTransportavel;
+    private Calendar dataUltimaManutencao;
 
-    private Veiculo(int codigo, TipoVeiculo tipo, String placa, double capacidadeCarga) {
+    private Veiculo(int codigo, TipoVeiculo tipo, String placa, double capacidadeCarga, double volumeMaximo, int anoFabricacao) {
         super(codigo);
         this.tipo = tipo;
         this.placa = validarPlaca(placa);
         this.capacidadeCarga = validarCapacidade(capacidadeCarga);
+        this.volumeMaximo = volumeMaximo;
+        this.anoFabricacao = anoFabricacao;
         this.status = StatusVeiculo.DISPONIVEL;
         this.kmRodados = 0;
         this.ultimaManutencao = null;
     }
 
-    public static void cadastrar(TipoVeiculo tipo, String placa, double capacidadeCarga) {
-        veiculos.add(new Veiculo(veiculos.size() + 1, tipo, placa, capacidadeCarga));
+    public static void cadastrar(TipoVeiculo tipo, String placa, double capacidadeCarga, double volumeMaximo, int anoFabricacao) {
+        veiculos.add(new Veiculo(veiculos.size() + 1, tipo, placa, capacidadeCarga, volumeMaximo, anoFabricacao));
     }
 
     public static Veiculo buscarPorCodigo(int codigo) {
@@ -36,6 +42,14 @@ public class Veiculo extends Entidade {
             throw new IllegalArgumentException("Código de veículo inválido");
         }
         return veiculos.get(codigo - 1);
+    }
+
+    public static void desativarVeiculo(int codigo) throws Exception {
+        Veiculo veiculo = buscarPorCodigo(codigo);
+        if (veiculo == null) {
+            throw new Exception("Veículo não encontrado.");
+        }
+        veiculo.status(StatusVeiculo.DESATIVADO);
     }
 
     public static List<Veiculo> listarAtivos() {
@@ -59,6 +73,30 @@ public class Veiculo extends Entidade {
         return capacidade;
     }
 
+    public static List<Veiculo> listarPorStatus(StatusVeiculo status) {
+        List<Veiculo> resultado = new ArrayList<>();
+        for (Veiculo v : listarAtivos()) {
+            if (v.getStatus() == status) {
+                resultado.add(v);
+            }
+        }
+        return resultado;
+    }
+
+    public void registrarManutencao(float kmRodados, Calendar data) {
+        // Atualiza a quilometragem
+        this.kmRodados = kmRodados;
+        this.ultimaManutencao = data;
+    }
+
+    public void atualizarQuilometragem(double novaQuilometragem) {
+        this.kmRodados = novaQuilometragem;
+    }
+
+    public void status(StatusVeiculo status) {
+        this.status = status;
+    }
+
     // Getters
     public TipoVeiculo getTipo() { return tipo; }
     public String getPlaca() { return placa; }
@@ -66,6 +104,17 @@ public class Veiculo extends Entidade {
     public StatusVeiculo getStatus() { return status; }
     public double getKmRodados() { return kmRodados; }
     public Calendar getUltimaManutencao() { return ultimaManutencao; }
+    public float getVolumeMaximoTransportavel() {
+        return volumeMaximoTransportavel;
+    }
+    
+    public int getAnoFabricacao() {
+        return anoFabricacao;
+    }
+    
+    public Calendar getDataUltimaManutencao() {
+        return dataUltimaManutencao;
+    }
 
     public void atualizarStatus(StatusVeiculo novoStatus) {
         this.status = novoStatus;

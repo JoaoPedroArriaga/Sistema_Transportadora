@@ -195,7 +195,7 @@ public class CSVUtils {
                 String.valueOf(v.getCodigo()),
                 v.getTipo().name(),
                 v.getPlaca(),
-                String.valueOf(v.getPesoMaximoTransportavel()),
+                String.valueOf(v.getCapacidadeCarga()),
                 String.valueOf(v.getVolumeMaximoTransportavel()),
                 String.valueOf(v.getAnoFabricacao()),
                 String.valueOf(v.getKmRodados()),

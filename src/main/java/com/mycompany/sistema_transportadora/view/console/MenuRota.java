@@ -94,7 +94,7 @@ public class MenuRota extends MenuBase {
             return;
         }
         veiculosDisponiveis.forEach(v -> {
-            System.out.println(v.getCodigo() + " - " + v.getTipo() + " | Placa: " + v.getPlacaFormatada());
+            System.out.println(v.getCodigo() + " - " + v.getTipo() + " | Placa: " + v.getPlaca());
         });
         System.out.print("Selecione o veículo: ");
         int codVeiculo = scanner.nextInt();
