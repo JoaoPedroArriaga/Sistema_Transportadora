@@ -1,3 +1,6 @@
+// Enumeração que representa os possíveis status de um veículo na frota.
+// Cada status possui uma descrição amigável para facilitar a exibição em interfaces e relatórios.
+
 package com.mycompany.sistema_transportadora.model.enums;
 
 public enum StatusVeiculo {
@@ -8,18 +11,18 @@ public enum StatusVeiculo {
     DESATIVADO("Desativado da frota"),
     RESERVADO("Reservado para manutenção");
 
-    private final String descricao;
+    private final String descricao; 
 
-    StatusVeiculo(String descricao) {
+    StatusVeiculo(String descricao) { // Construtor do enum que define a descrição do status do veículo.
         this.descricao = descricao;
     }
 
-    public String getDescricao() {
+    public String getDescricao() { // Obtém a descrição do status do veículo.
         return descricao;
     }
 
     @Override
-    public String toString() {
+    public String toString() { // Retorna a descrição amigável ao invés do nome da constante.
         return descricao;
     }
 }
